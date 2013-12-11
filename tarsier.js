@@ -32,7 +32,7 @@ if (typeof(window.tarsier) != "object") {
 		var script = doc.createElement("script");
 		if (script) {
 			script.type = "text/javascript";
-			script.src = src + "?" + Math.random();
+			script.src = src;
 			if (callback) {
 				script.onload = callback;
 				// IE
@@ -60,7 +60,7 @@ if (typeof(window.tarsier) != "object") {
 		if (link) {
 			link.rel = "stylesheet";
 			link.type = "text/css";
-			link.href = href + "?" + Math.random();
+			link.href = href;
 			var head = doc.getElementsByTagName("head");
 			if (head) {
 				head.item(0).appendChild(link);
