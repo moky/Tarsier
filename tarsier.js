@@ -73,18 +73,18 @@ if (typeof(window.tarsier) != "object") {
 	/**
 	 *  Environment variables
 	 */
-	var __FILE__ = ""; // current filename
-	var __PATH__ = ""; // current filepath
+	var __FILE__ = "https://raw.github.com/moky/Tarsier/master/tarsier.js"; // current filename
+	var __PATH__ = "https://raw.github.com/moky/Tarsier/master/"; // current filepath
 	
-	var scripts = document.getElementsByTagName("script");
-	if (scripts && scripts.length > 0) {
-		__FILE__ = scripts[scripts.length - 1].src;
-		var pos = __FILE__.lastIndexOf("/");
-		if (pos >= 0) {
-			__PATH__ = __FILE__.substr(0, pos + 1);
-			__FILE__ = __FILE__.substr(pos + 1);
-		}
-	}
+//	var scripts = document.getElementsByTagName("script");
+//	if (scripts && scripts.length > 0) {
+//		__FILE__ = scripts[scripts.length - 1].src;
+//		var pos = __FILE__.lastIndexOf("/");
+//		if (pos >= 0) {
+//			__PATH__ = __FILE__.substr(0, pos + 1);
+//			__FILE__ = __FILE__.substr(pos + 1);
+//		}
+//	}
 	
 	// include all dependences
 //	tarsier.importJS({src: "http://code.jquery.com/jquery.min.js"});
