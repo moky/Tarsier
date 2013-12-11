@@ -29,7 +29,7 @@
 		tarsier.http.ajax({
 						  url: template,
 						  dataType: "html",
-						  cache: false,
+						  //cache: false,
 						  success: function(html) {
 							var wgt = tarsier.widgets[target];
 							if (wgt) {
@@ -43,7 +43,7 @@
 		tarsier.http.ajax({
 						  url: datasource,
 						  dataType: "xml",
-						  cache: false,
+						  //cache: false,
 						  success: function(xml) {
 							var wgt = tarsier.widgets[target];
 							if (wgt) {
