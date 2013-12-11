@@ -15,7 +15,7 @@
 		try {
 			this.jsonObj = $.xml2json(data);
 		} catch(e) {
-			alert("XML parse error: " + e);
+			//alert("XML parse error: " + e);
 		}
 		return this;
 	};
