@@ -122,11 +122,10 @@ if (typeof(window.tarsier) != "object") {
 	}
 	
 	// include all dependences
-	tarsier.importJS({src: "http://code.jquery.com/jquery.min.js"});
-	tarsier.importJS({src: "http://borismoore.github.io/jquery-tmpl/jquery.tmpl.min.js"});
-	
-//	tarsier.importJS({src: __PATH__ + "3rd/jquery.js"});
-//	tarsier.importJS({src: __PATH__ + "3rd/jquery.tmpl.js"});
+//	tarsier.importJS({src: "http://code.jquery.com/jquery.min.js"});
+//	tarsier.importJS({src: "http://borismoore.github.io/jquery-tmpl/jquery.tmpl.min.js"});
+	tarsier.importJS({src: __PATH__ + "3rd/jquery.min.js"});
+	tarsier.importJS({src: __PATH__ + "3rd/jquery.tmpl.min.js"});
 	tarsier.importJS({src: __PATH__ + "3rd/jquery.xml2json.js"});
 	
 	tarsier.importJS({src: __PATH__ + "http.js"});
