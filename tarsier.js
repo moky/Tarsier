@@ -1,7 +1,7 @@
 ;
 /*!
  * Tarsier JavaScript Library v1.0.1
- * https://github.com/moky/Tarsier/
+ * http://github.com/moky/Tarsier/
  *
  * Includes jquery.js
  * http://jquery.com/
@@ -51,7 +51,7 @@ if (typeof(window.tarsier) != "object") {
 	
 	// finished current task
 	tarsier.base.Task.prototype.finished = function() {
-		tarsier.base.importings.splice(0, 1); // remove current task
+		tarsier.base.importings.shift(); // remove current task
 		if (tarsier.base.importings.length > 0) {
 			tarsier.base.importings[0].run(); // run next task
 		} else {
