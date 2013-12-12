@@ -13,6 +13,14 @@
  * Date: 2013-12-11 T10:43Z
  */
 
+/**
+ *
+ *  main
+ *
+ *  Author: moKy @ Nov.11, 2013
+ *
+ */
+
 if (typeof(window.tarsier) != "object") {
 	window.tarsier = {
 		version: "1.0.1"
@@ -22,86 +30,184 @@ if (typeof(window.tarsier) != "object") {
 // base functions
 (function(tarsier) {
 
-	// count of current importing tasks
-	tarsier.importings = -1; // init
+	////////////////////////////////////////////////////////////////////////////
+	//
+	//  namespace: base
+	//
+	tarsier.base = {
+		// importing tasks
+		importings: []
+	};
+	
 	/**
-	 *  Import javascript file
+	 *  class: Task
 	 */
-	tarsier.importJS = function(args) {
-		var src = args.src;
-		var callback = args.callback;
-		var doc = args.document || window.document;
-		
-		if (tarsier.importings < 0) {
-			tarsier.importings = 0; // start
+	tarsier.base.Task = function(args) {
+		this.url = args.url;
+		this.type = args.type;
+		this.callback = args.callback;
+		return this;
+	};
+	
+	// finished current task
+	tarsier.base.Task.prototype.finished = function() {
+		tarsier.base.importings.splice(0, 1); // remove current task
+		if (tarsier.base.importings.length > 0) {
+			tarsier.base.importings[0].run(); // run next task
+		} else {
+			tarsier.events.onload(); // all task finished
 		}
+	};
+	
+	// import js
+	tarsier.base.Task.prototype.js = function() {
+		var task = this;
+		var doc = task.document || window.document;
 		
 		var script = doc.createElement("script");
 		if (script) {
 			script.type = "text/javascript";
-			script.src = src;
+			script.src = task.url;
+			
 			// callback
 			script.onload = function() {
-				tarsier.importings--;
-				if (callback) callback();
+				try {
+					if (task.callback) task.callback();
+				} catch(e) {
+					alert("[Tarsier] callback error: " + e);
+				}
+				task.finished();
 			}
 			script.onreadystatechange = function() { // IE
 				if (this.readyState == "complete") {
-					--tarsier.importings;
-					if (callback) callback();
+					script.onload();
 				}
 			}
+			
 			// load
 			var head = doc.getElementsByTagName("head");
 			if (head) {
-				tarsier.importings++;
 				head.item(0).appendChild(script);
 			}
 		}
 	};
 	
-	/**
-	 *  Import css file
-	 */
-	tarsier.importCSS = function(args) {
-		var href = args.href;
-		var doc = args.document || window.document;
+	// import css
+	tarsier.base.Task.prototype.css = function() {
+		var task = this;
+		var doc = task.document || window.document;
 		
 		var link = doc.createElement("link");
 		if (link) {
 			link.rel = "stylesheet";
 			link.type = "text/css";
-			link.href = href;
+			link.href = task.url;
 			var head = doc.getElementsByTagName("head");
 			if (head) {
 				head.item(0).appendChild(link);
 			}
 		}
+		
+		task.finished();
 	};
 	
-	// importing finished?
-	tarsier.isReady = function() {
-		return tarsier.importings == 0;
-	}
-	
-	tarsier.readys = [];
-	
-	// window.onLoad
-	tarsier.ready = function(func) {
-		if (func) {
-			tarsier.readys[tarsier.readys.length] = func;
+	// run a task
+	tarsier.base.Task.prototype.run = function() {
+		if (this.type == "text/javascript") {
+			this.js();
+		} else if (this.type == "text/css") {
+			this.css();
+		} else {
+			alert("[Tarsier] task run: could not happen");
 		}
+	};
+	
+	//
+	// import something
+	//
+	tarsier.base.import = function(args) {
+		var task;
+		var type = args.type;
+		if (type == "text/javascript") {
+			task = new this.Task({url: args.src, type: args.type, callback: args.callback});
+		} else if (type == "text/css") {
+			task = new this.Task({url: args.href, type: args.type, callback: args.callback});
+		} else {
+			alert("[Tarsier] unknown import type: " + type);
+			return;
+		}
+		this.importings[this.importings.length] = task;
+		if (this.importings.length == 1) {
+			task.run();
+		}
+	};
+	
+	////////////////////////////////////////////////////////////////////////////
+	//
+	//  namespace: events
+	//
+	
+	tarsier.events = {
+		
+		isWindowLoaded: false,
+		
+		handlers: {
+			onload: []
+		}
+	};
+	
+	// window loaded & importing finished?
+	tarsier.events.isReady = function() {
+		return this.isWindowLoaded && tarsier.base.importings.length == 0;
+	};
+	
+	// add handler for event name
+	tarsier.events.add = function(name, handler) {
+		if (!name || !handler) return;
+		if (name == "load" || name == "onload" || name == "ready") {
+			this.handlers.onload[this.handlers.onload.length] = handler;
+		} else {
+			alert("[Tarsier] unknown event: " + name + " handler: " + handler);
+		}
+	};
+	
+	tarsier.events.onload = function() {
 		if (this.isReady()) {
-			for (var i = 0; i < tarsier.readys.length; ++i) {
-				tarsier.readys[i]();
+			for (var i = 0; i < this.handlers.onload.length; ++i) {
+				this.handlers.onload[i]();
 			}
-			tarsier.readys = [];
+			this.handlers.onload = [];
 		}
+	};
+	
+	//--------------------------------------------------------------------------
+	
+	/**
+	 *  import javascript file
+	 */
+	tarsier.importJS = function(args) {
+		args.type = "text/javascript";
+		this.base.import(args);
+	};
+	/**
+	 *  import style sheet
+	 */
+	tarsier.importCSS = function(args) {
+		args.type = "text/css";
+		this.base.import(args);
+	};
+	
+	/**
+	 *  adding handler for 'onload' event
+	 */
+	tarsier.ready = function(func) {
+		this.events.add("onload", func);
 	};
 	
 	window.onload = function() {
-		tarsier.ready();
-	}
+		tarsier.events.isWindowLoaded = true;
+		tarsier.events.onload();
+	};
 	
 	//--------------------------------------------------------------------------
 	
@@ -124,6 +230,8 @@ if (typeof(window.tarsier) != "object") {
 	// include all dependences
 //	tarsier.importJS({src: "http://code.jquery.com/jquery.min.js"});
 //	tarsier.importJS({src: "http://borismoore.github.io/jquery-tmpl/jquery.tmpl.min.js"});
+//	tarsier.importJS({src: "http://jquery-xml2json-plugin.googlecode.com/svn/trunk/jquery.xml2json.js"});
+	
 	tarsier.importJS({src: __PATH__ + "3rd/jquery.min.js"});
 	tarsier.importJS({src: __PATH__ + "3rd/jquery.tmpl.min.js"});
 	tarsier.importJS({src: __PATH__ + "3rd/jquery.xml2json.js"});
