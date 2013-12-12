@@ -1,7 +1,7 @@
 ;
 /*!
  * Tarsier JavaScript Library v1.0.1
- * http://moky.github.com/Tarsier/
+ * https://github.com/moky/Tarsier/
  *
  * Includes jquery.js
  * http://jquery.com/
