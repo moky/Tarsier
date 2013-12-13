@@ -179,7 +179,7 @@
 			p1 = this.data.indexOf(">", p2) + 1;
 			
 			p2 = this.data.lastIndexOf("</body>", p1);
-			if (p2 > 0) {
+			if (p2 > 0) {alert(this.data.substr(p1, p2 - p1));
 				$(document.body).html(this.data.substr(p1, p2 - p1));
 			}
 		}
