@@ -22,7 +22,7 @@
  */
 
 (function(tarsier) {
-	
+
 	// class: Template
 	tarsier.Template = function(html, url) {
 		this.data = html;
@@ -163,18 +163,24 @@
 		// process head
 		p1 = this.data.indexOf("<head");
 		if (p1 > 0) {
+			p1 += 5;
+			p1 = this.data.indexOf(">");
+			
 			p2 = this.data.indexOf("</head>");
 			if (p2 > 0) {
-				applyHead(this.data.substr(p1, p2 + 7 - p1), document);
+				applyHead(this.data.substr(p1, p2 - p1), document);
 			}
 		}
 		
 		// process body
 		p1 = this.data.indexOf("<body");
 		if (p1 > 0) {
+			p1 += 5;
+			p1 = this.data.indexOf(">");
+			
 			p2 = this.data.lastIndexOf("</body>");
 			if (p2 > 0) {
-				$(document.body).html(this.data.substr(p1, p2 + 7 - p1));
+				$(document.body).html(this.data.substr(p1, p2 - p1));
 			}
 		}
 	};
