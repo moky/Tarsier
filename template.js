@@ -158,27 +158,27 @@
 			this.replace(keys[i], $(document).find(keys[i]).html());
 		}
 		
-		var p1, p2;
+		var p1, p2 = 0;
 		
 		// process head
-		p1 = this.data.indexOf("<head");
+		p1 = this.data.indexOf("<head", p2);
 		if (p1 > 0) {
 			p1 += 5;
-			p1 = this.data.indexOf(">");
+			p1 = this.data.indexOf(">") + 1;
 			
-			p2 = this.data.indexOf("</head>");
+			p2 = this.data.indexOf("</head>", p1);
 			if (p2 > 0) {
 				applyHead(this.data.substr(p1, p2 - p1), document);
 			}
 		}
 		
 		// process body
-		p1 = this.data.indexOf("<body");
+		p1 = this.data.indexOf("<body", p2);
 		if (p1 > 0) {
 			p1 += 5;
-			p1 = this.data.indexOf(">");
+			p1 = this.data.indexOf(">") + 1;
 			
-			p2 = this.data.lastIndexOf("</body>");
+			p2 = this.data.lastIndexOf("</body>", p1);
 			if (p2 > 0) {
 				$(document.body).html(this.data.substr(p1, p2 - p1));
 			}
