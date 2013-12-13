@@ -224,8 +224,8 @@ if (typeof(window.tarsier) != "object") {
 		__FILE__ = scripts[scripts.length - 1].src;
 		var pos = __FILE__.lastIndexOf("/");
 		if (pos >= 0) {
-			__PATH__ = __FILE__.substr(0, pos + 1);
-			__FILE__ = __FILE__.substr(pos + 1);
+			__PATH__ = __FILE__.substring(0, pos + 1);
+			__FILE__ = __FILE__.substring(pos + 1);
 		}
 	}
 	
