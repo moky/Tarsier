@@ -163,8 +163,8 @@
 		// process head
 		p1 = this.data.indexOf("<head", p2);
 		if (p1 > 0) {
-			p1 += 5;
-			p1 = this.data.indexOf(">") + 1;
+			p2 = p1 + 5;
+			p1 = this.data.indexOf(">", p2) + 1;
 			
 			p2 = this.data.indexOf("</head>", p1);
 			if (p2 > 0) {
@@ -175,8 +175,8 @@
 		// process body
 		p1 = this.data.indexOf("<body", p2);
 		if (p1 > 0) {
-			p1 += 5;
-			p1 = this.data.indexOf(">") + 1;
+			p2 = p1 + 5;
+			p1 = this.data.indexOf(">", p2) + 1;
 			
 			p2 = this.data.lastIndexOf("</body>", p1);
 			if (p2 > 0) {
