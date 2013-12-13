@@ -43,7 +43,7 @@
 			
 			while ((p1 = html.indexOf(start, p2)) > 0) {
 				p1 += start.length;
-				res += html.substr(p2, p1 - p2);
+				res += html.substring(p2, p1);
 				
 				p2 = html.indexOf(end, p1);
 				if (p2 < p1) {
@@ -52,7 +52,7 @@
 				}
 				if (p2 == p1) continue; // blank url
 				
-				url = html.substr(p1, p2 - p1);
+				url = html.substring(p1, p2);
 				if (url.indexOf("://") > 0) {
 					res += tarsier.http.trimURI(url);
 				} else if (url[0] == '/') {
@@ -61,12 +61,12 @@
 					res += tarsier.http.trimURI(path + url);
 				}
 			}
-			res += html.substr(p2);
+			res += html.substring(p2);
 			return res;
 		}
 	
 		var path = tarsier.http.parseURI(url).path;
-		var domain = url.substr(0, url.indexOf(path));
+		var domain = url.substring(0, url.indexOf(path));
 		
 		html = standardize_urls(html, " href=\"", "\"", domain, path);
 		html = standardize_urls(html, " src=\"", "\"", domain, path);
@@ -87,7 +87,7 @@
 			p1 += 2;
 			p2 = this.data.indexOf("}", p1);
 			if (p2 < p1) break;
-			key = this.data.substr(p1, p2 - p1);
+			key = this.data.substring(p1, p2);
 			p2 += 1;
 			// check key
 			for (var i = 0; i < keys.length; ++i) {
@@ -105,7 +105,7 @@
 		var pos;
 		key = "${" + key + "}";
 		while ((pos = this.data.indexOf(key)) >= 0) {
-			this.data = this.data.substr(0, pos) + value + this.data.substr(pos + key.length);
+			this.data = this.data.substring(0, pos) + value + this.data.substring(pos + key.length);
 		}
 		return this.data;
 	};
@@ -127,7 +127,7 @@
 			p1 = data.indexOf("\"", p2);
 			if (p1 < p2) break; // error
 			
-			tarsier.importCSS({href: data.substr(p2, p1 - p2), document: document});
+			tarsier.importCSS({href: data.substring(p2, p1), document: document});
 			p2 = p1 + 1;
 		}
 		
@@ -142,7 +142,7 @@
 			p1 = data.indexOf("\"", p2);
 			if (p1 < p2) break; // error
 			
-			tarsier.importJS({src: data.substr(p2, p1 - p2), document: document});
+			tarsier.importJS({src: data.substring(p2, p1), document: document});
 			p2 = p1 + 1;
 		}
 	};
@@ -168,7 +168,7 @@
 			
 			p2 = this.data.indexOf("</head>", p1);
 			if (p2 > 0) {
-				applyHead(this.data.substr(p1, p2 - p1), document);
+				applyHead(this.data.substring(p1, p2), document);
 			}
 		}
 		
@@ -178,9 +178,9 @@
 			p2 = p1 + 5;
 			p1 = this.data.indexOf(">", p2) + 1;
 			
-			p2 = this.data.lastIndexOf("</body>", p1);
-			if (p2 > 0) {alert(this.data.substr(p1, p2 - p1));
-				$(document.body).html(this.data.substr(p1, p2 - p1));
+			p2 = this.data.lastIndexOf("</body>");
+			if (p2 > 0) {
+				$(document.body).html(this.data.substring(p1, p2));
 			}
 		}
 	};

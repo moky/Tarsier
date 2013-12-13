@@ -59,8 +59,8 @@
 			// scheme
 			pos = str.indexOf("://");
 			if (pos > 0) {
-				uri.scheme = str.substr(0, pos);
-				str = str.substr(pos + 3);
+				uri.scheme = str.substring(0, pos);
+				str = str.substring(pos + 3);
 				// default port
 				if (uri.scheme == "http" || uri.scheme == "https") {
 					uri.port = 80;
@@ -71,13 +71,13 @@
 				// domain
 				pos = str.indexOf("/");
 				if (pos >= 0) {
-					uri.domain = str.substr(0, pos);
-					str = str.substr(pos);
+					uri.domain = str.substring(0, pos);
+					str = str.substring(pos);
 					// port
 					pos = uri.domain.indexOf(":");
 					if (pos > 0) {
-						uri.port = uri.domain.substr(pos + 1);
-						uri.domain = uri.domain.substr(0, pos);
+						uri.port = uri.domain.substring(pos + 1);
+						uri.domain = uri.domain.substring(0, pos);
 					}
 				}
 			}
@@ -85,29 +85,29 @@
 			// fragment
 			pos = str.indexOf("#");
 			if (pos > 0) {
-				uri.fragment = str.substr(pos + 1);
-				str = str.substr(0, pos);
+				uri.fragment = str.substring(pos + 1);
+				str = str.substring(0, pos);
 			}
 			
 			// query string
 			pos = str.indexOf("?");
 			if (pos > 0) {
-				uri.query = str.substr(pos + 1);
-				str = str.substr(0, pos);
+				uri.query = str.substring(pos + 1);
+				str = str.substring(0, pos);
 				// params
 				var pairs = uri.query.split("&");
 				for (var i = pairs.length - 1; i >= 0; --i) {
 					pos = pairs[i].indexOf("=");
 					if (pos > 0) {
-						uri.params[pairs[i].substr(0, pos)] = pairs[i].substr(pos + 1);
+						uri.params[pairs[i].substring(0, pos)] = pairs[i].substring(pos + 1);
 					}
 				}
 			}
 			
 			pos = str.lastIndexOf("/");
 			if (pos > 0) {
-				uri.filename = str.substr(pos + 1);
-				uri.path = str.substr(0, pos + 1);
+				uri.filename = str.substring(pos + 1);
+				uri.path = str.substring(0, pos + 1);
 			}
 			
 			return uri;
@@ -127,8 +127,8 @@
 				pos = str.indexOf("/", pos + 3);
 				if (pos < 0) return str;
 				pos += 1;
-				prefix = str.substr(0, pos);
-				str = str.substr(pos);
+				prefix = str.substring(0, pos);
+				str = str.substring(pos);
 			}
 	
 			// suffix
@@ -137,8 +137,8 @@
 				pos = str.indexOf("#");
 			}
 			if (pos > 0) {
-				suffix = str.substr(pos);
-				str = str.substr(0, pos);
+				suffix = str.substring(pos);
+				str = str.substring(0, pos);
 			}
 			
 			var array = str.split("/");
