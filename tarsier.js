@@ -55,7 +55,7 @@ if (typeof(window.tarsier) != "object") {
 		if (tarsier.base.importings.length > 0) {
 			tarsier.base.importings[0].run(); // run next task
 		} else {
-			tarsier.events.onload(); // all task finished
+			tarsier.events.onload(); // all tasks finished
 		}
 	};
 	
@@ -102,6 +102,8 @@ if (typeof(window.tarsier) != "object") {
 			link.rel = "stylesheet";
 			link.type = "text/css";
 			link.href = task.url;
+			
+			// load
 			var head = doc.getElementsByTagName("head");
 			if (head) {
 				head.item(0).appendChild(link);
@@ -214,8 +216,8 @@ if (typeof(window.tarsier) != "object") {
 	/**
 	 *  Environment variables
 	 */
-	var __FILE__ = "https://raw.github.com/moky/Tarsier/master/tarsier.js"; // current filename
-	var __PATH__ = "https://raw.github.com/moky/Tarsier/master/"; // current filepath
+	var __FILE__ = "http://moky.github.io/Tarsier/tarsier.js"; // current filename
+	var __PATH__ = "http://moky.github.io/Tarsier/"; // current filepath
 	
 	var scripts = document.getElementsByTagName("script");
 	if (scripts && scripts.length > 0) {
