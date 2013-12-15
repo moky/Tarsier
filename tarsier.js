@@ -17,7 +17,7 @@
  *
  *  main
  *
- *  Author: moKy @ Nov.11, 2013
+ *  Author: moKy @ Dec. 11, 2013
  *
  */
 
@@ -124,6 +124,14 @@ if (typeof(window.tarsier) != "object") {
 		}
 	};
 	
+	// check duplicated
+	tarsier.base.Task.prototype.isDuplicated = function() {
+		for (var i = 0; i < tarsier.base.importings.length; ++i) {
+			if (tarsier.base.importings[i].url == this.url) return true;
+		}
+		return false;
+	}
+	
 	//
 	// import something
 	//
@@ -138,6 +146,12 @@ if (typeof(window.tarsier) != "object") {
 			alert("[Tarsier] unknown import type: " + type);
 			return;
 		}
+		
+		if (task.isDuplicated()) {
+			//alert("[Tarsier] duplicated url: " + task.url);
+			return;
+		}
+		
 		this.importings[this.importings.length] = task;
 		if (this.importings.length == 1) {
 			task.run();

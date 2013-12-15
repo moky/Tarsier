@@ -17,7 +17,7 @@
  *
  *  Handling HTTP request, Ajax, URLs, ...
  *
- *  Author: moKy @ Nov.11, 2013
+ *  Author: moKy @ Dec. 11, 2013
  *
  */
 
