@@ -111,7 +111,7 @@
 		while ((pos = this.data.indexOf(key)) >= 0) {
 			this.data = this.data.substring(0, pos) + value + this.data.substring(pos + key.length);
 		}
-		return this.data;
+		return this;
 	};
 	
 	/**
@@ -124,6 +124,7 @@
 		for (var i = 0; i < keys.length; ++i) {
 			this.replace(keys[i], document.find(keys[i]).html());
 		}
+		return this;
 	}
 	
 	/**
@@ -196,6 +197,8 @@
 				$(document.body).html(this.data.substring(p1, p2));
 			}
 		}
+		
+		return this;
 	};
 	
 })(tarsier);
