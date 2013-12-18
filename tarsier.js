@@ -57,6 +57,7 @@ if (typeof(window.tarsier) != "object") {
 		} else {
 			tarsier.events.onload(); // all tasks finished
 		}
+		return this;
 	};
 	
 	// import js
@@ -90,6 +91,7 @@ if (typeof(window.tarsier) != "object") {
 				head.item(0).appendChild(script);
 			}
 		}
+		return this;
 	};
 	
 	// import css
@@ -111,6 +113,7 @@ if (typeof(window.tarsier) != "object") {
 		}
 		
 		task.finished();
+		return this;
 	};
 	
 	// run a task
@@ -122,6 +125,7 @@ if (typeof(window.tarsier) != "object") {
 		} else {
 			alert("[Tarsier] task run: could not happen");
 		}
+		return this;
 	};
 	
 	// check duplicated
@@ -144,18 +148,19 @@ if (typeof(window.tarsier) != "object") {
 			task = new this.Task({url: args.href, type: args.type, callback: args.callback});
 		} else {
 			alert("[Tarsier] unknown import type: " + type);
-			return;
+			return this;
 		}
 		
 		if (task.isDuplicated()) {
 			//alert("[Tarsier] duplicated url: " + task.url);
-			return;
+			return this;
 		}
 		
 		this.importings[this.importings.length] = task;
 		if (this.importings.length == 1) {
 			task.run();
 		}
+		return this;
 	};
 	
 	////////////////////////////////////////////////////////////////////////////
@@ -185,6 +190,7 @@ if (typeof(window.tarsier) != "object") {
 		} else {
 			alert("[Tarsier] unknown event: " + name + " handler: " + handler);
 		}
+		return this;
 	};
 	
 	tarsier.events.onload = function() {
@@ -194,6 +200,7 @@ if (typeof(window.tarsier) != "object") {
 			}
 			this.handlers.onload = [];
 		}
+		return this;
 	};
 	
 	//--------------------------------------------------------------------------
@@ -207,6 +214,7 @@ if (typeof(window.tarsier) != "object") {
 						 type: "text/javascript",
 						 callback: callback
 		});
+		return this;
 	};
 	/**
 	 *  import style sheet
@@ -216,6 +224,7 @@ if (typeof(window.tarsier) != "object") {
 						 href: url,
 						 type: "text/css"
 		});
+		return this;
 	};
 	
 	/**
@@ -223,6 +232,7 @@ if (typeof(window.tarsier) != "object") {
 	 */
 	tarsier.ready = function(func) {
 		this.events.add("onload", func);
+		return this;
 	};
 	
 	window.onload = function() {

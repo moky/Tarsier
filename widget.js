@@ -61,6 +61,7 @@
 						  },
 						  error: function() { alert("Error loading template: " + url); }
 		});
+		return this;
 	};
 	
 	// query data from "args.url" with "args.type"
@@ -83,6 +84,7 @@
 						  },
 						  error: function() { alert("Error loading data: " + url); }
 		});
+		return this;
 	};
 	
 	// query html from "args.url"
@@ -105,6 +107,7 @@
 						  },
 						  error: function() { alert("Error loading html: " + url); }
 		});
+		return this;
 	};
 	
 	// query template and data
@@ -113,11 +116,14 @@
 		this.data = null;
 		this.queryTemplate({url: template});
 		this.queryData({url: dataSource, type: dataType});
+		return this;
 	};
 	
 	// load html
 	tarsier.Widget.prototype.load = function(url) {
+		this.html = null
 		this.queryHtml({url: template});
+		return this;
 	}
 	
 	// set html
@@ -125,12 +131,14 @@
 	tarsier.Widget.prototype.setHtml = function(html, base_url) {
 		html = (new tarsier.Template(html, base_url)).data;
 		this.html = html;
+		return this;
 	}
 	
 	// set template
 	// (override it)
 	tarsier.Widget.prototype.setTemplate = function(template, base_url) {
 		this.template = template;
+		return this;
 	};
 	
 	// set data
@@ -144,6 +152,7 @@
 			}
 		}
 		this.data = data;
+		return this;
 	};
 	
 	// show widget
@@ -158,11 +167,13 @@
 		} else {
 			// show template
 			if (this.template && this.data) {
+				$(this.target).html("");
 				var name = this.target;
 				$.template(name, this.template);
 				$.tmpl(name, this.data).appendTo(this.target);
 			}
 		}
+		return this;
 	};
 	
 })(tarsier);
