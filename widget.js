@@ -167,6 +167,7 @@
 		} else {
 			// show template
 			if (this.template && this.data) {
+				$(this.target).html("");
 				var name = this.target;
 				$.template(name, this.template);
 				$.tmpl(name, this.data).appendTo(this.target);
