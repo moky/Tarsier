@@ -25,9 +25,10 @@
 
 	// class: Template
 	tarsier.Template = function(html, url) {
-		this.data = html;
-		this.url = url;
-		return this.init(html, url);
+		if (this.init(html, url)) {
+			//
+		}
+		return this;
 	};
 	
 	/**
@@ -64,12 +65,15 @@
 			res += html.substring(p2);
 			return res;
 		}
-	
-		var path = tarsier.http.parseURI(url).path;
-		var domain = url.substring(0, url.indexOf(path));
 		
-		html = standardize_urls(html, " href=\"", "\"", domain, path);
-		html = standardize_urls(html, " src=\"", "\"", domain, path);
+		if (url) {
+			// process base url
+			var path = tarsier.http.parseURI(url).path;
+			var domain = url.substring(0, url.indexOf(path));
+			
+			html = standardize_urls(html, " href=\"", "\"", domain, path);
+			html = standardize_urls(html, " src=\"", "\"", domain, path);
+		}
 		
 		this.data = html;
 		this.url = url;
@@ -109,6 +113,18 @@
 		}
 		return this.data;
 	};
+	
+	/**
+	 *  Replace all keys with document
+	 */
+	tarsier.Template.prototype.replaceAll = function(document) {
+		var keys = this.keys();
+		var document = $(document);
+		// replace all keys
+		for (var i = 0; i < keys.length; ++i) {
+			this.replace(keys[i], document.find(keys[i]).html());
+		}
+	}
 	
 	/**
 	 *  Apply css and js
@@ -152,11 +168,8 @@
 	 */
 	tarsier.Template.prototype.apply = function(document) {
 		
-		// replace keys
-		var keys = this.keys();
-		for (var i = keys.length; i >= 0; --i) {
-			this.replace(keys[i], $(document).find(keys[i]).html());
-		}
+		// replace all keys first
+		this.replaceAll(document);
 		
 		var p1, p2 = 0;
 		

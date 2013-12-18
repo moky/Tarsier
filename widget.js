@@ -22,62 +22,147 @@
  */
 
 (function(tarsier) {
-	
-	// current widgets(use target as key)
+
+	// all widgets(use target as key)
 	tarsier.widgets = {};
 	
 	// class: Widget
 	tarsier.Widget = function(target) {
+		// where widget binded to
 		this.target = target;
+		// html
+		this.html = null;
+		// template
 		this.template = null;
 		this.data = null;
 		
+		// hook
 		tarsier.widgets[target] = this;
 		return this;
 	};
 	
-	tarsier.Widget.prototype.query = function(template, datasource) {
-		var target = this.target;
+	// query template from "args.url"
+	tarsier.Widget.prototype.queryTemplate = function(args) {
+		var target = args.target || this.target;
 		if (!target) return;
+		var url = args.url;
+		var type = "html";
 		// query template
 		tarsier.http.ajax({
-						  url: template,
-						  dataType: "html",
+						  url: url,
+						  dataType: type,
 						  //cache: false,
-						  success: function(html) {
+						  success: function(template) {
 							var wgt = tarsier.widgets[target];
 							if (wgt) {
-								wgt.template = html;
-								wgt.show(target);
+								wgt.setTemplate(template, url);
+								wgt.show(); // try to show
 							}
 						  },
 						  error: function() { alert("Error loading template: " + template); }
 		});
+	};
+	
+	// query data from "args.url" with "args.type"
+	tarsier.Widget.prototype.queryData = function(args) {
+		var target = args.target || this.target;
+		if (!target) return;
+		var url = args.url;
+		var type = args.type || "xml";
 		// query data
 		tarsier.http.ajax({
-						  url: datasource,
-						  dataType: "xml",
+						  url: url,
+						  dataType: type,
 						  //cache: false,
-						  success: function(xml) {
+						  success: function(data) {
 							var wgt = tarsier.widgets[target];
 							if (wgt) {
-								wgt.data = (new tarsier.XML(xml)).json();
-								wgt.show(target);
+								wgt.setData(data, type, url);
+								wgt.show(); // try to show
 							}
 						  },
 						  error: function() { alert("Error loading data: " + datasource); }
 		});
+	};
+	
+	// query html from "args.url"
+	tarsier.Widget.prototype.queryHtml = function(args) {
+		var target = args.target || this.target;
+		if (!target) return;
+		var url = args.url;
+		var type = "html";
+		// query html
+		tarsier.http.ajax({
+						  url: url,
+						  dataType: type,
+						  //cache: false,
+						  success: function(html) {
+							var wgt = tarsier.widgets[target];
+							if (wgt) {
+								wgt.setHtml(html, url);
+								wgt.show(true); // try to show
+							}
+						  },
+						  error: function() { alert("Error loading html: " + template); }
+		});
+	};
+	
+	// query template and data
+	tarsier.Widget.prototype.query = function(template, dataSource, dataType) {
+		this.template = null;
+		this.data = null;
+		this.queryTemplate({url: template});
+		this.queryData({url: dataSource, type: dataType});
+	};
+	
+	// load html
+	tarsier.Widget.prototype.load = function(url) {
+		this.queryHtml({url: template});
 	}
 	
-	tarsier.Widget.prototype.show = function(target) {
-		if (!this.template || !this.data) return;
-		if (!target) {
-			if (!this.target) return;
-			target = this.target;
-		}
-		
-		$.template(target, this.template);
-		$.tmpl(target, this.data).appendTo(target);
+	// set html
+	// (override it)
+	tarsier.Widget.prototype.setHtml = function(html, base_url) {
+		html = (new tarsier.Template(html, base_url)).data;
+		this.html = html;
 	}
+	
+	// set template
+	// (override it)
+	tarsier.Widget.prototype.setTemplate = function(template, base_url) {
+		this.template = template;
+	};
+	
+	// set data
+	// (override it)
+	tarsier.Widget.prototype.setData = function(data, type, base_url) {
+		if (type == "xml") {
+			data = (new tarsier.XML(data)).json();
+		} else if (type == "json") {
+			if (typeof(data) == typeof("string")) {
+				data = $.parseJSON(data);
+			}
+		}
+		this.data = data;
+	};
+	
+	// show widget
+	// (override it)
+	tarsier.Widget.prototype.show = function(html) {
+		if (this.target == null) return;
+		if (html) {
+			// show html
+			if (this.html) {
+				$(this.target).html(this.html);
+			}
+		} else {
+			// show template
+			if (this.template && this.data) {
+				var name = this.target;
+				$.template(name, this.template);
+				$.tmpl(name, this.data).appendTo(this.target);
+			}
+		}
+	};
 	
 })(tarsier);
