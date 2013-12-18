@@ -201,16 +201,21 @@ if (typeof(window.tarsier) != "object") {
 	/**
 	 *  import javascript file
 	 */
-	tarsier.importJS = function(args) {
-		args.type = "text/javascript";
-		this.base.import(args);
+	tarsier.importJS = function(url, callback) {
+		this.base.import({
+						 src: url,
+						 type: "text/javascript",
+						 callback: callback
+		});
 	};
 	/**
 	 *  import style sheet
 	 */
-	tarsier.importCSS = function(args) {
-		args.type = "text/css";
-		this.base.import(args);
+	tarsier.importCSS = function(url) {
+		this.base.import({
+						 href: url,
+						 type: "text/css"
+		});
 	};
 	
 	/**
@@ -244,17 +249,17 @@ if (typeof(window.tarsier) != "object") {
 	}
 	
 	// include all dependences
-//	tarsier.importJS({src: "http://code.jquery.com/jquery.min.js"});
-//	tarsier.importJS({src: "http://borismoore.github.io/jquery-tmpl/jquery.tmpl.min.js"});
-//	tarsier.importJS({src: "http://jquery-xml2json-plugin.googlecode.com/svn/trunk/jquery.xml2json.js"});
+//	tarsier.importJS("http://code.jquery.com/jquery.min.js");
+//	tarsier.importJS("http://borismoore.github.io/jquery-tmpl/jquery.tmpl.min.js");
+//	tarsier.importJS("http://jquery-xml2json-plugin.googlecode.com/svn/trunk/jquery.xml2json.js");
 	
-	tarsier.importJS({src: __PATH__ + "3rd/jquery.min.js"});
-	tarsier.importJS({src: __PATH__ + "3rd/jquery.tmpl.min.js"});
-	tarsier.importJS({src: __PATH__ + "3rd/jquery.xml2json.js"});
+	tarsier.importJS(__PATH__ + "3rd/jquery.min.js");
+	tarsier.importJS(__PATH__ + "3rd/jquery.tmpl.min.js");
+	tarsier.importJS(__PATH__ + "3rd/jquery.xml2json.js");
 	
-	tarsier.importJS({src: __PATH__ + "http.js"});
-	tarsier.importJS({src: __PATH__ + "xml.js"});
-	tarsier.importJS({src: __PATH__ + "template.js"});
-	tarsier.importJS({src: __PATH__ + "widget.js"});
+	tarsier.importJS(__PATH__ + "http.js");
+	tarsier.importJS(__PATH__ + "xml.js");
+	tarsier.importJS(__PATH__ + "template.js");
+	tarsier.importJS(__PATH__ + "widget.js");
 	
 })(tarsier);

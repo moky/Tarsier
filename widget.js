@@ -59,7 +59,7 @@
 								wgt.show(); // try to show
 							}
 						  },
-						  error: function() { alert("Error loading template: " + template); }
+						  error: function() { alert("Error loading template: " + url); }
 		});
 	};
 	
@@ -81,7 +81,7 @@
 								wgt.show(); // try to show
 							}
 						  },
-						  error: function() { alert("Error loading data: " + datasource); }
+						  error: function() { alert("Error loading data: " + url); }
 		});
 	};
 	
@@ -103,7 +103,7 @@
 								wgt.show(true); // try to show
 							}
 						  },
-						  error: function() { alert("Error loading html: " + template); }
+						  error: function() { alert("Error loading html: " + url); }
 		});
 	};
 	

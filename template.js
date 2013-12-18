@@ -143,7 +143,7 @@
 			p1 = data.indexOf("\"", p2);
 			if (p1 < p2) break; // error
 			
-			tarsier.importCSS({href: data.substring(p2, p1), document: document});
+			tarsier.importCSS(data.substring(p2, p1));
 			p2 = p1 + 1;
 		}
 		
@@ -158,7 +158,7 @@
 			p1 = data.indexOf("\"", p2);
 			if (p1 < p2) break; // error
 			
-			tarsier.importJS({src: data.substring(p2, p1), document: document});
+			tarsier.importJS(data.substring(p2, p1));
 			p2 = p1 + 1;
 		}
 	};
