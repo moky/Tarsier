@@ -235,9 +235,13 @@ if (typeof(window.tarsier) != "object") {
 		return this;
 	};
 	
+	var window_onload = window.onload; // save old handler
 	window.onload = function() {
 		tarsier.events.isWindowLoaded = true;
 		tarsier.events.onload();
+		if (typeof(window_onload) == "function") {
+			window_onload(); // call old handler
+		}
 	};
 	
 	//--------------------------------------------------------------------------
