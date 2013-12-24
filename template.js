@@ -174,7 +174,7 @@
 		
 		var p1, p2 = 0;
 		
-		// process head
+		// first, process head
 		p1 = this.data.indexOf("<head", p2);
 		if (p1 > 0) {
 			p2 = p1 + 5;
@@ -186,7 +186,7 @@
 			}
 		}
 		
-		// process body
+		// second, process body
 		p1 = this.data.indexOf("<body", p2);
 		if (p1 > 0) {
 			p2 = p1 + 5;
