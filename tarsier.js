@@ -88,9 +88,9 @@ if (typeof(window.tarsier) != "object") {
 			}
 			
 			// load
-			var head = doc.getElementsByTagName("head");
+			var head = doc.getElementsByTagName("head")[0] || doc.documentElement;
 			if (head) {
-				head.item(0).appendChild(script);
+				head.appendChild(script);
 			}
 		}
 		return this;
@@ -108,9 +108,9 @@ if (typeof(window.tarsier) != "object") {
 			link.href = task.url;
 			
 			// load
-			var head = doc.getElementsByTagName("head");
+			var head = doc.getElementsByTagName("head")[0] || doc.documentElement;
 			if (head) {
-				head.item(0).appendChild(link);
+				head.appendChild(link);
 			}
 		}
 		
