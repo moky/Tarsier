@@ -260,7 +260,7 @@ if (typeof(window.tarsier) != "object") {
 	var __PATH__ = "http://moky.github.io/Tarsier/"; // current filepath
 	
 	var scripts = document.getElementsByTagName("script");
-	if (scripts && scripts.length > 0) {
+	if (scripts) {
 		for (var i = scripts.length - 1; i >= 0; --i) {
 			if (scripts[i].src.lastIndexOf("tarsier.js") > 0) {
 				__FILE__ = scripts[i].src;
