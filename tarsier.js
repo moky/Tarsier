@@ -69,6 +69,8 @@ if (typeof(window.tarsier) != "object") {
 		if (script) {
 			script.type = "text/javascript";
 			script.src = task.url;
+			script.async = task.async;
+			script.charset = task.charset || "UTF-8";
 			
 			// callback
 			script.onload = function() {
@@ -143,9 +145,14 @@ if (typeof(window.tarsier) != "object") {
 		var task;
 		var type = args.type;
 		if (type == "text/javascript") {
-			task = new this.Task({url: args.src, type: args.type, callback: args.callback});
+			task = new this.Task({url: args.src,
+								 type: "text/javascript",
+								 charset: args.charset,
+								 async: args.async,
+								 callback: args.callback});
 		} else if (type == "text/css") {
-			task = new this.Task({url: args.href, type: args.type, callback: args.callback});
+			task = new this.Task({url: args.href,
+								 type: "text/css"});
 		} else {
 			alert("[Tarsier] unknown import type: " + type);
 			return this;
