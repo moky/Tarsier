@@ -202,10 +202,10 @@ if (typeof(window.tarsier) != "object") {
 	
 	tarsier.events.onload = function() {
 		if (this.isReady()) {
-			for (var i = 0; i < this.handlers.onload.length; ++i) {
-				this.handlers.onload[i]();
+			var handler = null;
+			while (handler = this.handlers.onload.shift()) {
+				handler();
 			}
-			this.handlers.onload = [];
 		}
 		return this;
 	};
