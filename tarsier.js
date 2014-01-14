@@ -256,19 +256,16 @@ if (typeof(window.tarsier) !== "object") {
 	/**
 	 *  Environment variables
 	 */
-	var __FILE__ = "http://moky.github.io/Tarsier/tarsier.js"; // current filename
+	var __FILE__ = "tarsier.js";                     // current filename
 	var __PATH__ = "http://moky.github.io/Tarsier/"; // current filepath
 	
 	var scripts = document.getElementsByTagName("script");
 	if (scripts) {
 		for (var i = scripts.length - 1; i >= 0; --i) {
-			if (scripts[i].src.lastIndexOf("tarsier.js") > 0) {
-				__FILE__ = scripts[i].src;
-				var pos = __FILE__.lastIndexOf("/");
-				if (pos >= 0) {
-					__PATH__ = __FILE__.substring(0, pos + 1);
-					__FILE__ = __FILE__.substring(pos + 1);
-				}
+			var pos = scripts[i].src.lastIndexOf(__FILE__);
+			if (pos > 0) {
+				__PATH__ = scripts[i].src.substring(0, pos);
+				break;
 			}
 		}
 	}
