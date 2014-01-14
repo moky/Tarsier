@@ -51,12 +51,12 @@
 					p2 = p1;
 					break; // error
 				}
-				if (p2 == p1) continue; // blank url
+				if (p2 === p1) continue; // blank url
 				
 				url = html.substring(p1, p2);
 				if (url.indexOf("://") > 0) {
 					res += tarsier.http.trimURI(url);
-				} else if (url[0] == '/') {
+				} else if (url[0] === '/') {
 					res += tarsier.http.trimURI(domain + url);
 				} else {
 					res += tarsier.http.trimURI(path + url);
@@ -95,7 +95,7 @@
 			p2 += 1;
 			// check key
 			for (var i = 0; i < keys.length; ++i) {
-				if (keys[i] == key) break;
+				if (keys[i] === key) break;
 			}
 			keys[i] = key;
 		}

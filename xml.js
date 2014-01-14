@@ -25,12 +25,7 @@
 	
 	// class: XML
 	tarsier.XML = function(data) {
-		this.jsonObj = null;
-		try {
-			this.jsonObj = $.xml2json(data);
-		} catch(e) {
-			//alert("XML parse error: " + e);
-		}
+		this.jsonObj = $.xml2json(data);
 		return this;
 	};
 	
