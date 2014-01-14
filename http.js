@@ -44,14 +44,14 @@
 		 */
 		parseURI: function(str) {
 			var uri = {
-				scheme: "",   //  http
-				domain: "",   //  www.domain.com
-				port: 0,      //  80
-				path: "",     //  /current/path/
-				filename: "", //  filename
-				query: "",    //  a=1&b=2
-				params: {},   //  { a: 1, b: 2 }
-				fragment: ""  //  anchor
+				scheme   : "",  //  http
+				domain   : "",  //  www.domain.com
+				port     : 0,   //  80
+				path     : "",  //  /current/path/
+				filename : "",  //  filename
+				query    : "",  //  a=1&b=2
+				params   : {},  //  { a: 1, b: 2 }
+				fragment : ""   //  anchor
 			};
 			
 			var pos;
@@ -62,9 +62,9 @@
 				uri.scheme = str.substring(0, pos);
 				str = str.substring(pos + 3);
 				// default port
-				if (uri.scheme == "http" || uri.scheme == "https") {
+				if (uri.scheme === "http" || uri.scheme === "https") {
 					uri.port = 80;
-				} else if (uri.scheme == "ftp") {
+				} else if (uri.scheme === "ftp") {
 					uri.port = 21;
 				}
 				
@@ -146,7 +146,7 @@
 			for (i = 0; i < array.length; ++i) {
 				if (array[i] == "") {
 					// error?
-				} else if (array[i] == ".." && j > 0 && array[j - 1] != "..") {
+				} else if (array[i] === ".." && j > 0 && array[j - 1] !== "..") {
 					--j;
 				} else {
 					array[j] = array[i];

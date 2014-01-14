@@ -21,7 +21,7 @@
  *
  */
 
-if (typeof(window.tarsier) != "object") {
+if (typeof(window.tarsier) !== "object") {
 	window.tarsier = {
 		version: "1.0.1"
 	};
@@ -82,7 +82,7 @@ if (typeof(window.tarsier) != "object") {
 				task.finished();
 			}
 			script.onreadystatechange = function() { // IE
-				if (this.readyState == "complete") {
+				if (this.readyState === "complete") {
 					script.onload();
 				}
 			}
@@ -120,9 +120,9 @@ if (typeof(window.tarsier) != "object") {
 	
 	// run a task
 	tarsier.base.Task.prototype.run = function() {
-		if (this.type == "text/javascript") {
+		if (this.type === "text/javascript") {
 			this.js();
-		} else if (this.type == "text/css") {
+		} else if (this.type === "text/css") {
 			this.css();
 		} else {
 			alert("[Tarsier] task run: could not happen");
@@ -133,7 +133,7 @@ if (typeof(window.tarsier) != "object") {
 	// check duplicated
 	tarsier.base.Task.prototype.isDuplicated = function() {
 		for (var i = 0; i < tarsier.base.importings.length; ++i) {
-			if (tarsier.base.importings[i].url == this.url) return true;
+			if (tarsier.base.importings[i].url === this.url) return true;
 		}
 		return false;
 	}
@@ -144,13 +144,13 @@ if (typeof(window.tarsier) != "object") {
 	tarsier.base.import = function(args) {
 		var task;
 		var type = args.type;
-		if (type == "text/javascript") {
+		if (type === "text/javascript") {
 			task = new this.Task({url: args.src,
 								 type: "text/javascript",
 								 charset: args.charset,
 								 async: args.async,
 								 callback: args.callback});
-		} else if (type == "text/css") {
+		} else if (type === "text/css") {
 			task = new this.Task({url: args.href,
 								 type: "text/css"});
 		} else {
@@ -192,7 +192,7 @@ if (typeof(window.tarsier) != "object") {
 	// add handler for event name
 	tarsier.events.add = function(name, handler) {
 		if (!name || !handler) return;
-		if (name == "load" || name == "onload" || name == "ready") {
+		if (name === "load" || name === "onload" || name === "ready") {
 			this.handlers.onload[this.handlers.onload.length] = handler;
 		} else {
 			alert("[Tarsier] unknown event: " + name + " handler: " + handler);
@@ -246,7 +246,7 @@ if (typeof(window.tarsier) != "object") {
 	window.onload = function() {
 		tarsier.events.isWindowLoaded = true;
 		tarsier.events.onload();
-		if (typeof(window_onload) == "function") {
+		if (typeof(window_onload) === "function") {
 			window_onload(); // call old handler
 		}
 	};
