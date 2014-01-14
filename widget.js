@@ -144,10 +144,10 @@
 	// set data
 	// (override it)
 	tarsier.Widget.prototype.setData = function(data, type, base_url) {
-		if (type == "xml") {
+		if (type === "xml") {
 			data = (new tarsier.XML(data)).json();
-		} else if (type == "json") {
-			if (typeof(data) == typeof("string")) {
+		} else if (type === "json") {
+			if (typeof(data) === "string") {
 				data = $.parseJSON(data);
 			}
 		}
