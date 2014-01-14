@@ -274,18 +274,23 @@ if (typeof(window.tarsier) !== "object") {
 	}
 	
 	// include all dependences
-//	tarsier.importJS("http://code.jquery.com/jquery.min.js");
-//	tarsier.importJS("http://borismoore.github.io/jquery-tmpl/jquery.tmpl.min.js");
-//	tarsier.importJS("http://jquery-xml2json-plugin.googlecode.com/svn/trunk/jquery.xml2json.js");
-//	tarsier.importJS("http://steamdev.com/snippet/js/jquery.snippet.min.js");
-//	tarsier.importCSS("http://steamdev.com/snippet/css/jquery.snippet.min.css");
+	if (false) {
+		tarsier.importJS("http://code.jquery.com/jquery.min.js");
+		tarsier.importJS("http://borismoore.github.io/jquery-tmpl/jquery.tmpl.min.js");
+		tarsier.importJS("http://jquery-xml2json-plugin.googlecode.com/svn/trunk/jquery.xml2json.js");
+//		tarsier.importJS("http://steamdev.com/snippet/js/jquery.snippet.min.js");
+//		tarsier.importCSS("http://steamdev.com/snippet/css/jquery.snippet.min.css");
+//		tarsier.importJS("http://jeromeetienne.github.io/jquery-qrcode/jquery.qrcode.min.js");
+	} else {
+		tarsier.importJS(__PATH__ + "3rd/jquery.min.js");
+		tarsier.importJS(__PATH__ + "3rd/jquery.tmpl.min.js");
+		tarsier.importJS(__PATH__ + "3rd/jquery.xml2json.js");
+//		tarsier.importJS(__PATH__ + "3rd/jquery.snippet.min.js");
+//		tarsier.importCSS(__PATH__ + "3rd/jquery.snippet.min.css");
+//		tarsier.importJS(__PATH__ + "3rd/jquery.qrcode.min.js");
+	}
 	
-	tarsier.importJS(__PATH__ + "3rd/jquery.min.js");
-	tarsier.importJS(__PATH__ + "3rd/jquery.tmpl.min.js");
-	tarsier.importJS(__PATH__ + "3rd/jquery.xml2json.js");
-//	tarsier.importJS(__PATH__ + "3rd/jquery.snippet.min.js");
-//	tarsier.importCSS(__PATH__ + "3rd/jquery.snippet.min.css");
-	
+	tarsier.importJS(__PATH__ + "string.js");
 	tarsier.importJS(__PATH__ + "http.js");
 	tarsier.importJS(__PATH__ + "xml.js");
 	tarsier.importJS(__PATH__ + "template.js");
