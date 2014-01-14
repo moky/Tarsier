@@ -59,7 +59,7 @@
 				return utf16to8(this.data);
 			}
 		}
-		//...
+		alert("[Tarsier] string.js: unsupported charsets (" + this.charset + " -> " + charset + ")");
 		return this.data;
 	};
 	
