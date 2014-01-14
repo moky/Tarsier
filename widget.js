@@ -59,7 +59,11 @@
 								wgt.show(); // try to show
 							}
 						  },
-						  error: function() { alert("Error loading template: " + url); }
+						  error: function() {
+//							var e = new Error();
+//							e.message = "[Tarsier] widget.js: error loading template from '" + url + "'";
+//							throw e;
+						  }
 		});
 		return this;
 	};
@@ -82,7 +86,11 @@
 								wgt.show(); // try to show
 							}
 						  },
-						  error: function() { alert("Error loading data: " + url); }
+						  error: function() {
+//							var e = new Error();
+//							e.message = "[Tarsier] widget.js: error loading data from '" + url + "'";
+//							throw e;
+						  }
 		});
 		return this;
 	};
@@ -105,7 +113,11 @@
 								wgt.show(true); // try to show
 							}
 						  },
-						  error: function() { alert("Error loading html: " + url); }
+						  error: function() {
+//							var e = new Error();
+//							e.message = "[Tarsier] widget.js: error loading html from '" + url + "'";
+//							throw e;
+						  }
 		});
 		return this;
 	};
