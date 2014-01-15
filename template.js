@@ -106,11 +106,8 @@
 	 *  Replace the template's key string with value
 	 */
 	tarsier.Template.prototype.replace = function(key, value) {
-		var pos;
-		key = "${" + key + "}";
-		while ((pos = this.data.indexOf(key)) >= 0) {
-			this.data = this.data.substring(0, pos) + value + this.data.substring(pos + key.length);
-		}
+		var re = new RegExp("\\$\\{" + key + "\\}", "g");
+		this.data = this.data.replace(re, value);
 		return this;
 	};
 	
@@ -119,7 +116,7 @@
 	 */
 	tarsier.Template.prototype.replaceAll = function(document) {
 		var keys = this.keys();
-		var document = $(document);
+		document = $(document); // jquery object
 		// replace all keys
 		for (var i = 0; i < keys.length; ++i) {
 			this.replace(keys[i], document.find(keys[i]).html());
