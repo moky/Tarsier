@@ -29,7 +29,7 @@
 		if (div) {
 			div = $(div);
 		} else {
-			div = $("<div id=\"" + tarsier.log.id + "\" class=\"" + tarsier.log.style + "\"></div>");
+			div = $("<div id=\"" + tarsier.log.id + "\"></div>");
 			div.css("z-index", 10000);
 			div.css("position", "fixed");
 			div.css("bottom", "0");
@@ -66,16 +66,20 @@
 	
 	//--------------------------------------------------------------------------
 	
-	tarsier.log = function(string) {
+	tarsier.log = function(string, type) {
+		type = type || "log";
 		var div = layer();
 		string = string.replace(/\</g, "&lt;").replace(/\>/g, "&gt;");
-		string = "<div class=\"tarsier_log_item\">" + string + "</div>\r\n";
+		string = "<div class=\"" + type + "\">" + string + "</div>\r\n";
 		div.html(string + div.html());
 		start();
 	};
 	
+	tarsier.error = function(string) {
+		this.log(string, "error");
+	};
+	
 	tarsier.log.id = "tarsier_log";
-	tarsier.log.style = "log";
 	tarsier.log.interval = 2000;
 	
 })(tarsier);
