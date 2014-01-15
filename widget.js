@@ -62,9 +62,7 @@
 							}
 						  },
 						  error: function() {
-//							var e = new Error();
-//							e.message = "[Tarsier] widget.js: error loading template from '" + url + "'";
-//							throw e;
+							tarsier.log("[Tarsier] widget.js: error loading template from '" + url + "'");
 						  }
 		});
 		return this;
@@ -89,9 +87,7 @@
 							}
 						  },
 						  error: function() {
-//							var e = new Error();
-//							e.message = "[Tarsier] widget.js: error loading data from '" + url + "'";
-//							throw e;
+							tarsier.log("[Tarsier] widget.js: error loading data from '" + url + "'");
 						  }
 		});
 		return this;
@@ -116,9 +112,7 @@
 							}
 						  },
 						  error: function() {
-//							var e = new Error();
-//							e.message = "[Tarsier] widget.js: error loading html from '" + url + "'";
-//							throw e;
+							tarsier.log("[Tarsier] widget.js: error loading html from '" + url + "'");
 						  }
 		});
 		return this;
