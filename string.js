@@ -3,9 +3,6 @@
  * Tarsier JavaScript Library v1.0.1
  * http://github.com/moky/Tarsier/
  *
- * Includes jquery.js
- * http://jquery.com/
- *
  * Copyright 2013 moKy at slanissue.com
  * Released under the MIT license
  * http://jquery.org/license

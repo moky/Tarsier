@@ -5,6 +5,8 @@
  *
  * Includes jquery.js
  * http://jquery.com/
+ * Includes jquery.tmpl.js
+ * https://github.com/borismoore/jquery-tmpl/
  *
  * Copyright 2013 moKy at slanissue.com
  * Released under the MIT license

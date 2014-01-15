@@ -5,6 +5,8 @@
  *
  * Includes jquery.js
  * http://jquery.com/
+ * Includes jquery.xml2json.js
+ * http://jquery-xml2json-plugin.googlecode.com/
  *
  * Copyright 2013 moKy at slanissue.com
  * Released under the MIT license
