@@ -53,7 +53,7 @@
 	var _interval = 0;
 	
 	function start() {
-		stop();
+		stop(); // clear old timer
 		_interval = setInterval(tick, tarsier.log.interval);
 	}
 	
@@ -66,17 +66,21 @@
 	
 	//--------------------------------------------------------------------------
 	
-	tarsier.log = function(string, type) {
+	tarsier.log = function(info, type) {
 		type = type || "log";
+		if (typeof(info) === "string") {
+			info = info.replace(/\</g, "&lt;").replace(/\>/g, "&gt;");
+		}
+		info = "<div class=\"" + type + "\">" + info + "</div>";
+		
+		start(); // reset the timer
+		
 		var div = layer();
-		string = string.replace(/\</g, "&lt;").replace(/\>/g, "&gt;");
-		string = "<div class=\"" + type + "\">" + string + "</div>";
-		div.html(div.html() + "\r\n" + string);
-		start();
+		div.html(div.html() + "\r\n" + info);
 	};
 	
-	tarsier.error = function(string) {
-		this.log(string, "error");
+	tarsier.error = function(info) {
+		this.log(info, "error");
 	};
 	
 	tarsier.log.id = "tarsier_log";
