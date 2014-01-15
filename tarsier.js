@@ -55,9 +55,10 @@
 //		tarsier.importJS(__PATH__ + "3rd/jquery.qrcode.min.js");
 	}
 	
+	tarsier.importJS(__PATH__ + "log.js");
 	tarsier.importJS(__PATH__ + "string.js");
-	tarsier.importJS(__PATH__ + "http.js");
 	tarsier.importJS(__PATH__ + "xml.js");
+	tarsier.importJS(__PATH__ + "http.js");
 	tarsier.importJS(__PATH__ + "template.js");
 	tarsier.importJS(__PATH__ + "widget.js");
 	

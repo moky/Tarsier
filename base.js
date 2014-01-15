@@ -74,7 +74,7 @@ if (typeof(window.tarsier) !== "object") {
 				try {
 					if (task.callback) task.callback();
 				} catch(e) {
-					alert("[Tarsier] callback error: " + e);
+					tarsier.log("[Tarsier] callback error: " + e);
 				}
 				task.finished();
 			}
@@ -122,7 +122,7 @@ if (typeof(window.tarsier) !== "object") {
 		} else if (this.type === "text/css") {
 			this.css();
 		} else {
-			alert("[Tarsier] task run: could not happen");
+			tarsier.log("[Tarsier] task run: could not happen");
 		}
 		return this;
 	};
@@ -151,12 +151,12 @@ if (typeof(window.tarsier) !== "object") {
 			task = new this.Task({url: args.href,
 								 type: "text/css"});
 		} else {
-			alert("[Tarsier] unknown import type: " + type);
+			tarsier.log("[Tarsier] unknown import type: " + type);
 			return this;
 		}
 		
 		if (task.isDuplicated()) {
-			//alert("[Tarsier] duplicated url: " + task.url);
+			tarsier.log("[Tarsier] duplicated url: " + task.url);
 			return this;
 		}
 		
@@ -192,7 +192,7 @@ if (typeof(window.tarsier) !== "object") {
 		if (name === "load" || name === "onload" || name === "ready") {
 			this.handlers.onload[this.handlers.onload.length] = handler;
 		} else {
-			alert("[Tarsier] unknown event: " + name + " handler: " + handler);
+			tarsier.log("[Tarsier] unknown event: " + name + " handler: " + handler);
 		}
 		return this;
 	};
