@@ -70,8 +70,8 @@
 		type = type || "log";
 		var div = layer();
 		string = string.replace(/\</g, "&lt;").replace(/\>/g, "&gt;");
-		string = "<div class=\"" + type + "\">" + string + "</div>\r\n";
-		div.html(string + div.html());
+		string = "<div class=\"" + type + "\">" + string + "</div>";
+		div.html(div.html() + "\r\n" + string);
 		start();
 	};
 	
