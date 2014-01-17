@@ -132,7 +132,7 @@
 		this.html = null
 		this.queryHtml({url: template});
 		return this;
-	}
+	};
 	
 	// set html
 	// (override it)
@@ -140,7 +140,7 @@
 		html = (new tarsier.Template(html, base_url)).data;
 		this.html = html;
 		return this;
-	}
+	};
 	
 	// set template
 	// (override it)

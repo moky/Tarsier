@@ -122,7 +122,7 @@
 			this.replace(keys[i], document.find(keys[i]).html());
 		}
 		return this;
-	}
+	};
 	
 	/**
 	 *  Apply css and js

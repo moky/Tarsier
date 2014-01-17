@@ -133,7 +133,7 @@ if (typeof(window.tarsier) !== "object") {
 			if (tarsier.base.importings[i].url === this.url) return true;
 		}
 		return false;
-	}
+	};
 	
 	//
 	// import something
