@@ -20,6 +20,14 @@
 
 (function(tarsier) {
 	
+	function alert(message) {
+		if (typeof(tarsier.log) === "function") {
+			tarsier.log(message);
+		} else {
+			window.alert(message);
+		}
+	}
+	
 	// convert string from 'utf-16' to 'utf-8'
 	function utf16to8(str) {
 		var out, i, len, c;
@@ -51,12 +59,14 @@
 	};
 	
 	tarsier.String.prototype.convertTo = function(charset) {
-		if (this.charset === "utf-16") {
+		if (this.charset === charset) {
+			return this.data;
+		} else if (this.charset === "utf-16") {
 			if (charset === "utf-8") {
 				return utf16to8(this.data);
 			}
 		}
-		tarsier.log("[Tarsier] string.js: unsupported charsets (" + this.charset + " -> " + charset + ")");
+		alert("[Tarsier] string.js: unsupported charsets (" + this.charset + " -> " + charset + ")");
 		return this.data;
 	};
 	
