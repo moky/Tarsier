@@ -62,8 +62,10 @@
 				uri.scheme = str.substring(0, pos);
 				str = str.substring(pos + 3);
 				// default port
-				if (uri.scheme === "http" || uri.scheme === "https") {
+				if (uri.scheme === "http") {
 					uri.port = 80;
+				} else if (uri.scheme === "https") {
+					uri.port = 443;
 				} else if (uri.scheme === "ftp") {
 					uri.port = 21;
 				}
