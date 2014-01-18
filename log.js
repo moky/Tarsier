@@ -25,11 +25,12 @@
 
 	// get shared log layer
 	function layer() {
-		var div = document.getElementById(tarsier.log.id);
+		var id = tarsier.log.id || "tarsier_log";
+		var div = document.getElementById(id);
 		if (div) {
 			div = $(div);
 		} else {
-			div = $("<div id=\"" + tarsier.log.id + "\"></div>");
+			div = $("<div id=\"" + id + "\"></div>");
 			div.css("z-index", 10000);
 			div.css("position", "fixed");
 			div.css("bottom", "0");
@@ -64,11 +65,9 @@
 		}
 	}
 	
-	//--------------------------------------------------------------------------
-	
-	tarsier.log = function(info, type) {
-		type = type || "log";
+	function log(info, type) {
 		if (typeof(info) === "string") {
+			info = info.replace(/\&/g, "&amp;");
 			info = info.replace(/\</g, "&lt;").replace(/\>/g, "&gt;");
 		}
 		info = "<div class=\"" + type + "\">" + info + "</div>";
@@ -77,13 +76,18 @@
 		
 		var div = layer();
 		div.html(div.html() + "\r\n" + info);
+	}
+	
+	//--------------------------------------------------------------------------
+	
+	tarsier.log = function(info) {
+		log(info, "log");
 	};
 	
 	tarsier.error = function(info) {
-		this.log(info, "error");
+		log(info, "error");
 	};
 	
-	tarsier.log.id = "tarsier_log";
 	tarsier.log.interval = 2000;
 	
 })(tarsier);
