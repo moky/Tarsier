@@ -88,6 +88,6 @@
 		log(info, "error");
 	};
 	
-	tarsier.log.interval = 2000;
+	tarsier.log.interval = 1000;
 	
 })(tarsier);
