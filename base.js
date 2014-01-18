@@ -28,7 +28,11 @@ if (typeof(window.tarsier) !== "object") {
 (function(tarsier) {
 	
 	function alert(message) {
-		tarsier.log(message);
+		if (typeof(tarsier.log) === "function") {
+			tarsier.log(message);
+		} else {
+			window.alert(message);
+		}
 	}
 	
 	////////////////////////////////////////////////////////////////////////////
