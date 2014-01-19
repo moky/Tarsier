@@ -32,6 +32,7 @@
 	// convert string from 'utf-16' to 'utf-8'
 	function utf16to8(str) {
 		var out, i, len, c;
+		
 		out = "";
 		len = str.length;
 		for (i = 0; i < len; i++) {
@@ -52,10 +53,10 @@
 	
 	// convert string from 'utf-8' to 'utf-16'
 	function utf8to16(str) {
-		var i, len, c;
+		var out, i, len, c;
 		var char2, char3;
 		
-		var out = "";
+		out = "";
 		len = str.length;
 		i = 0;
 		while (i < len) {
@@ -100,10 +101,12 @@
 	
 	// base-64 encoding
 	function base64encode(str) {
-		var i = 0, len = str.length;
+		var out, i, len;
 		var c1, c2, c3;
 		
-		var out = "";
+		len = str.length;
+		i = 0;
+		out = "";
 		while (i < len) {
 			c1 = str.charCodeAt(i++) & 0xff;
 			if (i == len) {
@@ -131,10 +134,12 @@
 	
 	// base-64 decoding
 	function base64decode(str) {
+		var out, i, len;
 		var c1, c2, c3, c4;
-		var i = 0, len = str.length;
 		
-		var out = "";
+		len = str.length;
+		i = 0;
+		out = "";
 		while (i < len) {
 			/* c1 */
 			do {
