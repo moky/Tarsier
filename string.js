@@ -19,8 +19,9 @@
  */
 
 (function(tarsier) {
-	
+
 	function alert(message) {
+		message = "[Tarsier] string.js > " + message;
 		if (typeof(tarsier.log) === "function") {
 			tarsier.log(message);
 		} else {
@@ -66,7 +67,7 @@
 				return utf16to8(this.data);
 			}
 		}
-		alert("[Tarsier] string.js: unsupported charsets (" + this.charset + " -> " + charset + ")");
+		alert("unsupported charsets (" + this.charset + " -> " + charset + ")");
 		return this.data;
 	};
 	
