@@ -22,6 +22,15 @@
  */
 
 (function(tarsier) {
+
+	function unescape(string) {
+		var text = window.unescape(string);
+		if (text != string && typeof(tarsier.String) === "function") {
+			var str = new tarsier.String(text, "utf-8");
+			text = str.convertTo("utf-16");
+		}
+		return text;
+	}
 	
 	// namespace: http
 	tarsier.http = {
@@ -87,7 +96,7 @@
 			// fragment
 			pos = str.indexOf("#");
 			if (pos > 0) {
-				uri.fragment = str.substring(pos + 1);
+				uri.fragment = unescape(str.substring(pos + 1));
 				str = str.substring(0, pos);
 			}
 			
@@ -101,7 +110,7 @@
 				for (var i = pairs.length - 1; i >= 0; --i) {
 					pos = pairs[i].indexOf("=");
 					if (pos > 0) {
-						uri.params[pairs[i].substring(0, pos)] = pairs[i].substring(pos + 1);
+						uri.params[pairs[i].substring(0, pos)] = unescape(pairs[i].substring(pos + 1));
 					}
 				}
 			}
