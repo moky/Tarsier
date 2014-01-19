@@ -27,6 +27,15 @@ if (typeof(window.tarsier) !== "object") {
 // base functions
 (function(tarsier) {
 
+	function alert(message) {
+		message = "[Tarsier] base.js > " + message;
+		if (typeof(tarsier.log) === "function") {
+			tarsier.log(message);
+		} else {
+			window.alert(message);
+		}
+	}
+	
 	////////////////////////////////////////////////////////////////////////////
 	//
 	//  namespace: base
@@ -74,7 +83,7 @@ if (typeof(window.tarsier) !== "object") {
 				try {
 					if (task.callback) task.callback();
 				} catch(e) {
-					tarsier.log("[Tarsier] callback error: " + e);
+					alert("callback error: " + e);
 				}
 				task.finished();
 			}
@@ -122,7 +131,7 @@ if (typeof(window.tarsier) !== "object") {
 		} else if (this.type === "text/css") {
 			this.css();
 		} else {
-			tarsier.log("[Tarsier] task run: could not happen");
+			alert("task run: could not happen");
 		}
 		return this;
 	};
@@ -151,12 +160,12 @@ if (typeof(window.tarsier) !== "object") {
 			task = new this.Task({url: args.href,
 								 type: "text/css"});
 		} else {
-			tarsier.log("[Tarsier] unknown import type: " + type);
+			alert("unknown import type: " + type);
 			return this;
 		}
 		
 		if (task.isDuplicated()) {
-			tarsier.log("[Tarsier] duplicated url: " + task.url);
+			alert("duplicated url: " + task.url);
 			return this;
 		}
 		
@@ -192,7 +201,7 @@ if (typeof(window.tarsier) !== "object") {
 		if (name === "load" || name === "onload" || name === "ready") {
 			this.handlers.onload[this.handlers.onload.length] = handler;
 		} else {
-			tarsier.log("[Tarsier] unknown event: " + name + " handler: " + handler);
+			alert("unknown event: " + name + " handler: " + handler);
 		}
 		return this;
 	};
