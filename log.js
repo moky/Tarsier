@@ -44,7 +44,7 @@
 		var div = layer();
 		var array = div.children();
 		if (array.length > 0) {
-			array[0].remove();
+			$(array[0]).remove();
 		} else {
 			div.remove();
 			stop();
