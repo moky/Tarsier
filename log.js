@@ -23,8 +23,8 @@
 
 (function(tarsier) {
 
-	// get shared log layer
-	function layer() {
+	// get shared log tray
+	function tray() {
 		var id = tarsier.log.id || "tarsier_log";
 		var div = document.getElementById(id);
 		if (div) {
@@ -34,60 +34,112 @@
 			div.css("z-index", 10000);
 			div.css("position", "fixed");
 			div.css("bottom", "0");
+			// events
+			div.mouseover(stop).mouseout(start);
 			
-			div.appendTo(document.body);
+			div.appendTo(document.body || document.documentElement);
 		}
 		return div;
 	}
 	
 	function tick() {
-		var div = layer();
+		// clear timers
+		_timer1 = 0;
+		_timer2 = 0;
+		
+		var div = tray();
 		var array = div.children();
 		if (array.length > 0) {
 			$(array[0]).remove();
+			_timer2 = setTimeout(tick, 100);
 		} else {
 			div.remove();
-			stop();
 		}
 	}
 	
-	var _interval = 0;
+	var _timer1 = 0;
+	var _timer2 = 0;
+	
+	function stop1() {
+		if (_timer1 != 0) {
+			// stop timer
+			clearTimeout(_timer1);
+			_timer1 = 0;
+		}
+	}
+	function stop2() {
+		if (_timer2 != 0) {
+			// stop timer
+			clearTimeout(_timer2);
+			_timer2 = 0;
+		}
+	}
+	function stop() {
+		stop1();
+		stop2();
+	}
 	
 	function start() {
-		stop(); // clear old timer
-		_interval = setInterval(tick, tarsier.log.interval);
+		stop();
+		_timer1 = setTimeout(tick, tarsier.log.interval);
 	}
 	
-	function stop() {
-		if (_interval != 0) {
-			clearInterval(_interval);
-			_interval = 0;
-		}
-	}
-	
-	function log(info, type) {
+	function show(info, type) {
+		tarsier.log.history.push({type: type, message: info});
+		
 		if (typeof(info) === "string") {
 			info = info.replace(/\&/g, "&amp;");
 			info = info.replace(/\</g, "&lt;").replace(/\>/g, "&gt;");
 		}
-		info = "<div class=\"" + type + "\">" + info + "</div>";
+		var item = $("<div class=\"" + type + "\">" + info + "</div>");
 		
 		start(); // reset the timer
 		
-		var div = layer();
-		div.html(div.html() + "\r\n" + info);
+		var div = tray();
+		item.appendTo(div);
 	}
 	
 	//--------------------------------------------------------------------------
 	
+	// log
 	tarsier.log = function(info) {
-		log(info, "log");
+		// console
+		if (window.console && window.console.log) {
+			window.console.log(info);
+		}
+		// show
+		if (tarsier.log.debug) {
+			show(info, "log");
+		}
 	};
 	
+	// warn
+	tarsier.warn = function(info) {
+		// console
+		if (window.console && window.console.warn) {
+			window.console.warn(info);
+		}
+		// show
+		if (tarsier.log.debug) {
+			show(info, "warn");
+		}
+	};
+	
+	// error
 	tarsier.error = function(info) {
-		log(info, "error");
+		// console
+		if (window.console && window.console.error) {
+			window.console.error(info);
+		}
+		// show
+		if (tarsier.log.debug) {
+			show(info, "error");
+		}
 	};
 	
-	tarsier.log.interval = 1000;
+	// configuration
+	tarsier.log.debug = true;
+	tarsier.log.interval = 5000; // timer1's interval
+	tarsier.log.history = [];
 	
 })(tarsier);
