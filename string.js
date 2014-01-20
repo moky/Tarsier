@@ -47,15 +47,15 @@
 	
 	tarsier.convertorKey = function(from, to) {
 		return _sk(from) + " -> " + _sk(to);
-	}
+	};
 	tarsier.convertor = function(from, to) {
 		var key = this.convertorKey(from, to);
 		return _convertors[key];
-	}
+	};
 	tarsier.setConvertor = function(from, to, convertor) {
 		var key = this.convertorKey(from, to);
 		_convertors[key] = convertor;
-	}
+	};
 	
 	//
 	// en/decoder
@@ -65,16 +65,16 @@
 	
 	tarsier.encoder = function(name) {
 		return _encoders[_sk(name)];
-	}
+	};
 	tarsier.decoder = function(name) {
 		return _decoders[_sk(name)];
-	}
+	};
 	tarsier.setEncoder = function(name, encoder) {
 		_encoders[_sk(name)] = encoder;
-	}
+	};
 	tarsier.setDecoder = function(name, decoder) {
 		_decoders[_sk(name)] = decoder;
-	}
+	};
 	
 	//--------------------------------------------------------------------------
 	
@@ -100,25 +100,27 @@
 		return this.data;
 	};
 	
-	// encode
-	tarsier.String.prototype.encode = function(name) {
-		var encode = tarsier.encoder(name);
-		if (encode) {
-			this.data = encode(this.data);
-		} else {
-			alert("unsupported encoder: " + name);
-		}
-		return this.data;
-	}
-	// decode
-	tarsier.String.prototype.decode = function(name) {
-		var decode = tarsier.decoder(name);
-		if (decode) {
-			this.data = decode(this.data);
-		} else {
-			alert("unsupported decoder: " + name);
-		}
-		return this.data;
-	}
+//	// encode
+//	tarsier.String.prototype.encode = function(name) {
+//		var encode = tarsier.encoder(name);
+//		if (encode) {
+//			this.data = encode(this.data);
+//			this.charset = name;
+//		} else {
+//			alert("unsupported encoder: " + name);
+//		}
+//		return this.data;
+//	};
+//	// decode
+//	tarsier.String.prototype.decode = function(name) {
+//		var decode = tarsier.decoder(name);
+//		if (decode) {
+//			this.data = decode(this.data);
+//			//this.charset = "utf-16";
+//		} else {
+//			alert("unsupported decoder: " + name);
+//		}
+//		return this.data;
+//	};
 	
 })(tarsier);
