@@ -100,25 +100,27 @@
 		return this.data;
 	};
 	
-	// encode
-	tarsier.String.prototype.encode = function(name) {
-		var encode = tarsier.encoder(name);
-		if (encode) {
-			this.data = encode(this.data);
-		} else {
-			alert("unsupported encoder: " + name);
-		}
-		return this.data;
-	};
-	// decode
-	tarsier.String.prototype.decode = function(name) {
-		var decode = tarsier.decoder(name);
-		if (decode) {
-			this.data = decode(this.data);
-		} else {
-			alert("unsupported decoder: " + name);
-		}
-		return this.data;
-	};
+//	// encode
+//	tarsier.String.prototype.encode = function(name) {
+//		var encode = tarsier.encoder(name);
+//		if (encode) {
+//			this.data = encode(this.data);
+//			this.charset = name;
+//		} else {
+//			alert("unsupported encoder: " + name);
+//		}
+//		return this.data;
+//	};
+//	// decode
+//	tarsier.String.prototype.decode = function(name) {
+//		var decode = tarsier.decoder(name);
+//		if (decode) {
+//			this.data = decode(this.data);
+//			//this.charset = "utf-16";
+//		} else {
+//			alert("unsupported decoder: " + name);
+//		}
+//		return this.data;
+//	};
 	
 })(tarsier);
