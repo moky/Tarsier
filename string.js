@@ -45,16 +45,31 @@
 	//
 	var _convertors = []; // key: 'from -> to'
 	
+	// key
 	tarsier.convertorKey = function(from, to) {
 		return _sk(from) + " -> " + _sk(to);
 	};
+	// getter
 	tarsier.convertor = function(from, to) {
 		var key = this.convertorKey(from, to);
 		return _convertors[key];
 	};
+	// setter
 	tarsier.setConvertor = function(from, to, convertor) {
 		var key = this.convertorKey(from, to);
 		_convertors[key] = convertor;
+	};
+	// conv
+	tarsier.convert = function(from, to, data) {
+		if (from === to) {
+			return data;
+		}
+		var conv = this.convertor(from, to);
+		if (conv) {
+			return conv(data);
+		}
+		alert("unsupported charsets converting (" + from + " -> " + to + ")");
+		return data;
 	};
 	
 	//
@@ -63,17 +78,37 @@
 	var _encoders = [];
 	var _decoders = [];
 	
+	// getter
 	tarsier.encoder = function(name) {
 		return _encoders[_sk(name)];
 	};
 	tarsier.decoder = function(name) {
 		return _decoders[_sk(name)];
 	};
+	// setter
 	tarsier.setEncoder = function(name, encoder) {
 		_encoders[_sk(name)] = encoder;
 	};
 	tarsier.setDecoder = function(name, decoder) {
 		_decoders[_sk(name)] = decoder;
+	};
+	// encode
+	tarsier.encode = function(name, data) {
+		var func = this.encoder(name);
+		if (func) {
+			return func(data);
+		}
+		alert("unsupported encoder: " + name);
+		return data;
+	};
+	// decode
+	tarsier.decode = function(name, data) {
+		var func = this.decode(name);
+		if (func) {
+			return func(data);
+		}
+		alert("unsupported decoder: " + name);
+		return data;
 	};
 	
 	//--------------------------------------------------------------------------
@@ -87,17 +122,7 @@
 	
 	// converting string from 'this.charset' to 'charset'
 	tarsier.String.prototype.convertTo = function(charset) {
-		if (this.charset === charset) {
-			return this.data;
-		}
-		
-		var conv = tarsier.convertor(this.charset, charset);
-		if (conv) {
-			return conv(this.data);
-		}
-		
-		alert("unsupported charsets converting (" + this.charset + " -> " + charset + ")");
-		return this.data;
+		return tarsier.convert(this.charset, charset, this.data);
 	};
 	
 //	// encode
