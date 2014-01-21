@@ -52,7 +52,23 @@
 	// getter
 	tarsier.convertor = function(from, to) {
 		var key = this.convertorKey(from, to);
-		return _convertors[key];
+		// 1. convert directly
+		var conv = _convertors[key];
+		if (conv) {
+			return conv;
+		}
+		// 2. convert via 'utf-8'
+		var key1 = this.convertorKey(from, "utf-8");
+		var key2 = this.convertorKey("utf-8", to);
+		var conv1 = _convertors[key1];
+		var conv2 = _convertors[key2];
+		if (conv1 && conv2) {
+			// save it for next query
+			_convertors[key] = function(str) { return conv2(conv1(str)); };
+			return _convertors[key];
+		}
+		alert("cannot find convertor: (" + from + " -> " + to + ")");
+		return null;
 	};
 	// setter
 	tarsier.setConvertor = function(from, to, convertor) {
@@ -65,19 +81,11 @@
 		if (from === to) {
 			return data;
 		}
-		// 1. convert directly
 		var conv = this.convertor(from, to);
 		if (conv) {
 			return conv(data);
 		}
-		// 2. convert via 'utf-8'
-		var conv1 = this.convertor(from, "utf-8");
-		var conv2 = this.convertor("utf-8", to);
-		if (conv1 && conv2) {
-			return conv2(conv1(data));
-		}
 		// sorry....
-		alert("unsupported charsets converting (" + from + " -> " + to + ")");
 		return data;
 	};
 	
@@ -134,27 +142,27 @@
 		return tarsier.convert(this.charset, charset, this.data);
 	};
 	
-//	// encode
-//	tarsier.String.prototype.encode = function(name) {
-//		var encode = tarsier.encoder(name);
-//		if (encode) {
-//			this.data = encode(this.data);
-//			this.charset = name;
-//		} else {
-//			alert("unsupported encoder: " + name);
-//		}
-//		return this.data;
-//	};
-//	// decode
-//	tarsier.String.prototype.decode = function(name) {
-//		var decode = tarsier.decoder(name);
-//		if (decode) {
-//			this.data = decode(this.data);
-//			//this.charset = "utf-16";
-//		} else {
-//			alert("unsupported decoder: " + name);
-//		}
-//		return this.data;
-//	};
+	// encode
+	tarsier.String.prototype.encode = function(name, data) {
+		data = data || this.data;
+		var encode = tarsier.encoder(name);
+		if (encode) {
+			return encode(data);
+		} else {
+			alert("unsupported encoder: " + name);
+			return data;
+		}
+	};
+	// decode
+	tarsier.String.prototype.decode = function(name, data) {
+		data = data || this.data;
+		var decode = tarsier.decoder(name);
+		if (decode) {
+			return decode(data);
+		} else {
+			alert("unsupported decoder: " + name);
+			return data;
+		}
+	};
 	
 })(tarsier);
