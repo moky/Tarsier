@@ -26,7 +26,7 @@
 	 *
 	 *  Usage:
 	 *      var xx = new GB2312UTF8();
-	 *      var Utf8 = xx.Gb2312ToUtf8("你aaa好aaaaa");
+	 *      var Utf8 = xx.Gb2312ToUtf8("你好,世界!");
 	 *      var Gb2312 = xx.Utf8ToGb2312(Utf8);
 	 *      alert(Gb2312);
 	 */
@@ -174,23 +174,23 @@
 	// convertors
 	tarsier.setConvertor("utf-8", "gb2312", utf8_to_gb2312);
 	tarsier.setConvertor("gb2312", "utf-8", gb2312_to_utf8);
-	//
-	// NOTE: 'utf-16' <-> 'utf-8' <-> 'gb2312'
-	//
-	tarsier.setConvertor("utf-16", "gb2312", function(str) {
-		return utf8_to_gb2312(tarsier.convert("utf-16", "utf-8", str));
-	});
-	tarsier.setConvertor("gb2312", "utf-16", function(str) {
-		return tarsier.convert("utf-8", "utf-16", gb2312_to_utf8(str));
-	});
-	//
-	// NOTE: 'base64' <-> 'utf-8' <-> 'gb2312'
-	//
-	tarsier.setConvertor("base64", "gb2312", function(str) {
-		return utf8_to_gb2312(tarsier.convert("base64", "utf-8", str));
-	});
-	tarsier.setConvertor("gb2312", "base64", function(str) {
-		return tarsier.convert("utf-8", "base64", gb2312_to_utf8(str));
-	});
+//	//
+//	// NOTE: 'utf-16' <-> 'utf-8' <-> 'gb2312'
+//	//
+//	tarsier.setConvertor("utf-16", "gb2312", function(str) {
+//		return utf8_to_gb2312(tarsier.convert("utf-16", "utf-8", str));
+//	});
+//	tarsier.setConvertor("gb2312", "utf-16", function(str) {
+//		return tarsier.convert("utf-8", "utf-16", gb2312_to_utf8(str));
+//	});
+//	//
+//	// NOTE: 'base64' <-> 'utf-8' <-> 'gb2312'
+//	//
+//	tarsier.setConvertor("base64", "gb2312", function(str) {
+//		return utf8_to_gb2312(tarsier.convert("base64", "utf-8", str));
+//	});
+//	tarsier.setConvertor("gb2312", "base64", function(str) {
+//		return tarsier.convert("utf-8", "base64", gb2312_to_utf8(str));
+//	});
 	
 })(tarsier);
