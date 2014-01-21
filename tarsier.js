@@ -59,6 +59,7 @@
 	tarsier.importJS(__PATH__ + "object.js");
 	tarsier.importJS(__PATH__ + "string.js");
 	tarsier.importJS(__PATH__ + "string.utf.js");
+	tarsier.importJS(__PATH__ + "string.gb2312.js");
 	tarsier.importJS(__PATH__ + "string.base64.js");
 	tarsier.importJS(__PATH__ + "xml.js");
 	tarsier.importJS(__PATH__ + "http.js");
