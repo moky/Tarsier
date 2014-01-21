@@ -39,40 +39,41 @@
 	function _sk(str) {
 		return lowercase(str.replace(/\-/g, ""));
 	}
+	// convertor key
+	function convertor_key(from, to) {
+		return _sk(from) + " -> " + _sk(to);
+	}
 	
 	//
 	// convertor
 	//
 	var _convertors = []; // key: 'from -> to'
 	
-	// key
-	tarsier.convertorKey = function(from, to) {
-		return _sk(from) + " -> " + _sk(to);
-	};
 	// getter
 	tarsier.convertor = function(from, to) {
-		var key = this.convertorKey(from, to);
+		var key = convertor_key(from, to);
 		// 1. convert directly
 		var conv = _convertors[key];
 		if (conv) {
 			return conv;
 		}
 		// 2. convert via 'utf-8'
-		var key1 = this.convertorKey(from, "utf-8");
-		var key2 = this.convertorKey("utf-8", to);
+		var key1 = convertor_key(from, "utf-8");
+		var key2 = convertor_key("utf-8", to);
 		var conv1 = _convertors[key1];
 		var conv2 = _convertors[key2];
 		if (conv1 && conv2) {
 			// save it for next query
-			_convertors[key] = function(str) { return conv2(conv1(str)); };
-			return _convertors[key];
+			conv = function(str) { return conv2(conv1(str)); };
+			_convertors[key] = conv;
+			return conv;
 		}
 		alert("cannot find convertor: (" + from + " -> " + to + ")");
 		return null;
 	};
 	// setter
 	tarsier.setConvertor = function(from, to, convertor) {
-		var key = this.convertorKey(from, to);
+		var key = convertor_key(from, to);
 		_convertors[key] = convertor;
 	};
 	// conv
