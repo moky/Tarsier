@@ -61,13 +61,22 @@
 	};
 	// conv
 	tarsier.convert = function(from, to, data) {
+		// same charsets
 		if (from === to) {
 			return data;
 		}
+		// 1. convert directly
 		var conv = this.convertor(from, to);
 		if (conv) {
 			return conv(data);
 		}
+		// 2. convert via 'utf-8'
+		var conv1 = this.convertor(from, "utf-8");
+		var conv2 = this.convertor("utf-8", to);
+		if (conv1 && conv2) {
+			return conv2(conv1(data));
+		}
+		// sorry....
 		alert("unsupported charsets converting (" + from + " -> " + to + ")");
 		return data;
 	};
