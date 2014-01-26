@@ -41,6 +41,8 @@
 		parse: function(str) {
 			var uri = {
 				scheme   : "",  //  http
+				username : "",  //  ...
+				password : "",  //  ...
 				domain   : "",  //  www.domain.com
 				port     : 0,   //  80
 				path     : "",  //  /current/path/
@@ -64,6 +66,8 @@
 					uri.port = 443;
 				} else if (uri.scheme === "ftp") {
 					uri.port = 21;
+				} else {
+					//...
 				}
 				
 				// domain
@@ -71,8 +75,20 @@
 				if (pos >= 0) {
 					uri.domain = str.substring(0, pos);
 					str = str.substring(pos);
+					// username
+					pos = uri.domain.lastIndexOf("@");
+					if (pos > 0) {
+						uri.username = unescape(uri.domain.substring(0, pos));
+						uri.domain = uri.domain.substring(pos + 1);
+						// password
+						pos = uri.username.indexOf(":");
+						if (pos > 0) {
+							uri.password = uri.username.substring(pos + 1);
+							uri.username = uri.username.substring(0, pos);
+						}
+					}
 					// port
-					pos = uri.domain.indexOf(":");
+					pos = uri.domain.lastIndexOf(":");
 					if (pos > 0) {
 						uri.port = uri.domain.substring(pos + 1);
 						uri.domain = uri.domain.substring(0, pos);
