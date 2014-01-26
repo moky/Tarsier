@@ -32,26 +32,13 @@
 		return text;
 	}
 	
-	// namespace: http
-	tarsier.http = {
-		/**
-		 *  HTTP Request
-		 */
-		request: function(url) {
-			return this.ajax({ url: url, dataType: "text", async:false }).responseText;
-		},
-		ajax: function(params) {
-			try {
-				return $.ajax(params);
-			} catch(e) {
-				return e;
-			}
-		},
+	// namespace: uri
+	tarsier.uri = {
 		
 		/**
 		 *  Parse a URI string
 		 */
-		parseURI: function(str) {
+		parse: function(str) {
 			var uri = {
 				scheme   : "",  //  http
 				domain   : "",  //  www.domain.com
@@ -92,7 +79,7 @@
 					}
 				}
 			}
-	
+			
 			// fragment
 			pos = str.indexOf("#");
 			if (pos > 0) {
@@ -127,11 +114,11 @@
 		/**
 		 *  Trim a URL string by killing "../"
 		 */
-		trimURI: function(str) {
+		trim: function(str) {
 			var prefix = "";
 			var suffix = "";
 			var pos;
-	
+			
 			// prefix
 			pos = str.indexOf("://");
 			if (pos > 0) {
@@ -141,7 +128,7 @@
 				prefix = str.substring(0, pos);
 				str = str.substring(pos);
 			}
-	
+			
 			// suffix
 			pos = str.indexOf("?");
 			if (pos < 0) {
@@ -168,14 +155,33 @@
 			if (j == 0) {
 				return prefix + suffix;
 			}
-	
+			
 			str = array[0];
 			for (i = 1; i < j; ++i) {
 				str += "/" + array[i];
 			}
-	
+			
 			return prefix + str + suffix;
 		}
+	}; // EOF 'tarsier.uri'
+	
+	// namespace: http
+	tarsier.http = {
+		/**
+		 *  HTTP Request
+		 */
+		request: function(url) {
+			return this.ajax({ url: url, dataType: "text", async:false }).responseText;
+		},
+		
+		ajax: function(params) {
+			try {
+				return $.ajax(params);
+			} catch(e) {
+				return e;
+			}
+		}
+		
 	}; // EOF 'tarsier.http'
 	
 })(tarsier);
