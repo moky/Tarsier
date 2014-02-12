@@ -147,6 +147,11 @@
 		return tarsier.convert(this.charset, charset, this.data);
 	};
 	
+	// to string
+	tarsier.String.prototype.toString = function() {
+		return this.convertTo("utf-16");
+	};
+	
 	// encode
 	tarsier.String.prototype.encode = function(name, data) {
 		data = data || this.data;

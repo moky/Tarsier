@@ -104,7 +104,7 @@
 		return json(this.data);
 	};
 	
-	tarsier.Object.prototype.description = function() {
+	tarsier.Object.prototype.toString = function() {
 		return desc(this.data);
 	};
 	
