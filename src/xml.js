@@ -23,16 +23,20 @@
  *
  */
 
-(function(tarsier) {
+!function(tarsier) {
 	
 	// class: XML
-	tarsier.XML = function(data) {
+	var XML = function(data) {
 		this.jsonObj = $.xml2json(data);
 		return this;
 	};
 	
-	tarsier.XML.prototype.json = function() {
+	var json = function() {
 		return this.jsonObj;
 	};
 	
-})(tarsier);
+	tarsier.XML = XML;
+	
+	tarsier.XML.prototype.json = json;
+	
+}(tarsier);

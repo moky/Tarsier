@@ -23,22 +23,19 @@
  *
  */
 
-(function(tarsier) {
+!function(tarsier) {
 
-	function alert(message) {
+	var alert = function(message) {
 		message = "[Tarsier] widget.js > " + message;
 		if (typeof(tarsier.log) === "function") {
 			tarsier.log(message);
 		} else {
 			window.alert(message);
 		}
-	}
-	
-	// all widgets(use target as key)
-	tarsier.widgets = {};
+	};
 	
 	// class: Widget
-	tarsier.Widget = function(target) {
+	var Widget = function(target) {
 		// where widget binded to
 		this.target = target;
 		// html
@@ -53,7 +50,7 @@
 	};
 	
 	// query template from "args.url"
-	tarsier.Widget.prototype.queryTemplate = function(args) {
+	var queryTemplate = function(args) {
 		var target = args.target || this.target;
 		if (!target) return;
 		var url = args.url;
@@ -78,7 +75,7 @@
 	};
 	
 	// query data from "args.url" with "args.type"
-	tarsier.Widget.prototype.queryData = function(args) {
+	var queryData = function(args) {
 		var target = args.target || this.target;
 		if (!target) return;
 		var url = args.url;
@@ -103,7 +100,7 @@
 	};
 	
 	// query html from "args.url"
-	tarsier.Widget.prototype.queryHtml = function(args) {
+	var queryHtml = function(args) {
 		var target = args.target || this.target;
 		if (!target) return;
 		var url = args.url;
@@ -128,7 +125,7 @@
 	};
 	
 	// query template and data
-	tarsier.Widget.prototype.query = function(template, dataSource, dataType) {
+	var query = function(template, dataSource, dataType) {
 		this.template = null;
 		this.data = null;
 		this.queryTemplate({url: template});
@@ -137,7 +134,7 @@
 	};
 	
 	// load html
-	tarsier.Widget.prototype.load = function(url) {
+	var load = function(url) {
 		this.html = null
 		this.queryHtml({url: template});
 		return this;
@@ -145,7 +142,7 @@
 	
 	// set html
 	// (override it)
-	tarsier.Widget.prototype.setHtml = function(html, base_url) {
+	var setHtml = function(html, base_url) {
 		html = (new tarsier.Template(html, base_url)).data;
 		this.html = html;
 		return this;
@@ -153,14 +150,14 @@
 	
 	// set template
 	// (override it)
-	tarsier.Widget.prototype.setTemplate = function(template, base_url) {
+	var setTemplate = function(template, base_url) {
 		this.template = template;
 		return this;
 	};
 	
 	// set data
 	// (override it)
-	tarsier.Widget.prototype.setData = function(data, type, base_url) {
+	var setData = function(data, type, base_url) {
 		if (type === "xml") {
 			data = (new tarsier.XML(data)).json();
 		} else if (type === "json") {
@@ -174,16 +171,16 @@
 	
 	// show widget
 	// (override it)
-	tarsier.Widget.prototype.show = function(html) {
+	var show = function(html) {
 		if (this.target == null) return;
 		if (html) {
 			// show html
-			if (this.html) {
+			if (this.target && this.html) {
 				$(this.target).html(this.html);
 			}
 		} else {
 			// show template
-			if (this.template && this.data) {
+			if (this.target && this.template && this.data) {
 				$(this.target).html("");
 				var name = this.target;
 				$.template(name, this.template);
@@ -193,4 +190,19 @@
 		return this;
 	};
 	
-})(tarsier);
+	// all widgets(use target as key)
+	tarsier.widgets = {};
+	
+	tarsier.Widget = Widget;
+	
+	tarsier.Widget.prototype.queryTemplate = queryTemplate;
+	tarsier.Widget.prototype.queryData = queryData;
+	tarsier.Widget.prototype.queryHtml = queryHtml;
+	tarsier.Widget.prototype.query = query;
+	tarsier.Widget.prototype.load = load;
+	tarsier.Widget.prototype.setHtml = setHtml;
+	tarsier.Widget.prototype.setTemplate = setTemplate;
+	tarsier.Widget.prototype.setData = setData;
+	tarsier.Widget.prototype.show = show;
+	
+}(tarsier);

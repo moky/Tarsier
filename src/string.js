@@ -18,31 +18,31 @@
  *
  */
 
-(function(tarsier) {
+!function(tarsier) {
 
-	function alert(message) {
+	var alert = function(message) {
 		message = "[Tarsier] string.js > " + message;
 		if (typeof(tarsier.log) === "function") {
 			tarsier.log(message);
 		} else {
 			window.alert(message);
 		}
-	}
+	};
 	
-	function lowercase(str) {
+	var lowercase = function(str) {
 		for (var i = str.length - 1; i >= 0; --i) {
 			str[0] = str[0].toLowerCase();
 		}
 		return str;
-	}
+	};
 	// standard key? short key?
-	function _sk(str) {
+	var _sk = function(str) {
 		return lowercase(str.replace(/\-/g, ""));
-	}
+	};
 	// convertor key
-	function convertor_key(from, to) {
+	var convertor_key = function(from, to) {
 		return _sk(from) + " -> " + _sk(to);
-	}
+	};
 	
 	//--------------------------------------------------------------------------
 	
@@ -175,4 +175,4 @@
 		}
 	};
 	
-})(tarsier);
+}(tarsier);

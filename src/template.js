@@ -21,10 +21,10 @@
  *
  */
 
-(function(tarsier) {
+!function(tarsier) {
 
 	// class: Template
-	tarsier.Template = function(html, url) {
+	var Template = function(html, url) {
 		if (this.init(html, url)) {
 			//
 		}
@@ -34,7 +34,7 @@
 	/**
 	 *  Repalce all "src" and "href" string to absulute URLs
 	 */
-	tarsier.Template.prototype.init = function(html, url) {
+	var init = function(html, url) {
 		
 		function standardize_urls(text, start, end, domain, path) {
 			var res = "";
@@ -83,7 +83,7 @@
 	/**
 	 *  Get all keys in the template
 	 */
-	tarsier.Template.prototype.keys = function() {
+	var getKeys = function() {
 		var keys = [];
 		var key;
 		var p1, p2 = 0;
@@ -105,7 +105,7 @@
 	/**
 	 *  Replace the template's key string with value
 	 */
-	tarsier.Template.prototype.replace = function(key, value) {
+	var replace = function(key, value) {
 		var re = new RegExp("\\$\\{" + key + "\\}", "g");
 		this.data = this.data.replace(re, value);
 		return this;
@@ -114,7 +114,7 @@
 	/**
 	 *  Replace all keys with document
 	 */
-	tarsier.Template.prototype.replaceAll = function(document) {
+	var replaceAll = function(document) {
 		var keys = this.keys();
 		document = $(document); // jquery object
 		// replace all keys
@@ -127,7 +127,7 @@
 	/**
 	 *  Apply css and js
 	 */
-	function applyHead(data, document) {
+	var applyHead = function(data, document) {
 		var p1, p2;
 		
 		// import style sheets
@@ -164,7 +164,7 @@
 	/**
 	 *  Apply page with template
 	 */
-	tarsier.Template.prototype.apply = function(document) {
+	var apply = function(document) {
 		
 		// replace all keys first
 		this.replaceAll(document);
@@ -198,4 +198,12 @@
 		return this;
 	};
 	
-})(tarsier);
+	tarsier.Template = Template;
+	
+	tarsier.Template.prototype.init = init;
+	tarsier.Template.prototype.keys = getKeys;
+	tarsier.Template.prototype.replace = replace;
+	tarsier.Template.prototype.replaceAll = replaceAll;
+	tarsier.Template.prototype.apply = apply;
+	
+}(tarsier);

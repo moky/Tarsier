@@ -18,10 +18,10 @@
  *
  */
 
-(function(tarsier) {
+!function(tarsier) {
 
 	// flat the element into a json string
-	function json(element) {
+	var json = function(element) {
 		var type = typeof(element);
 		if (type === "object" && element instanceof Array) {
 			type = "array";
@@ -52,10 +52,10 @@
 		} else {
 			return element;
 		}
-	}
+	};
 	
 	// flat the element into a string
-	function desc(element, indent) {
+	var desc = function(element, indent) {
 		indent = indent || "";
 		var _INDENT_ = indent + "\t";
 		var _CRLF_ = "\r\n";
@@ -90,7 +90,7 @@
 		} else {
 			return element;
 		}
-	}
+	};
 	
 	//--------------------------------------------------------------------------
 	
@@ -108,4 +108,4 @@
 		return desc(this.data);
 	};
 	
-})(tarsier);
+}(tarsier);
