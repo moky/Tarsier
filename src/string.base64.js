@@ -18,16 +18,16 @@
  *
  */
 
-(function(tarsier) {
+!function(tarsier) {
 
-	function alert(message) {
+	var alert = function(message) {
 		message = "[Tarsier] string.base64.js > " + message;
 		if (typeof(tarsier.log) === "function") {
 			tarsier.log(message);
 		} else {
 			window.alert(message);
 		}
-	}
+	};
 	
 	//
 	// Base64 chars
@@ -44,7 +44,7 @@
 									  41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1);
 	
 	// Base64 encoding
-	function base64encode(str) {
+	var base64encode = function(str) {
 		var out, i, len;
 		var c1, c2, c3;
 		
@@ -74,10 +74,10 @@
 			out += base64EncodeChars.charAt(c3 & 0x3F);
 		}
 		return out;
-	}
+	};
 	
 	// Base64 decoding
-	function base64decode(str) {
+	var base64decode = function(str) {
 		var out, i, len;
 		var c1, c2, c3, c4;
 		
@@ -126,7 +126,7 @@
 			out += String.fromCharCode(((c3 & 0x03) << 6) | c4);
 		}
 		return out;
-	}
+	};
 	
 	//--------------------------------------------------------------------------
 	
@@ -138,4 +138,4 @@
 	tarsier.setConvertor("utf-8", "base64", base64encode);
 	tarsier.setConvertor("base64", "utf-8", base64decode);
 	
-})(tarsier);
+}(tarsier);

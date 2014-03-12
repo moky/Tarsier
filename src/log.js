@@ -21,10 +21,10 @@
  *
  */
 
-(function(tarsier) {
+!function(tarsier) {
 
 	// get shared log tray
-	function tray() {
+	var tray = function() {
 		var id = tarsier.log.id || "tarsier_log";
 		var div = document.getElementById(id);
 		if (div) {
@@ -40,9 +40,9 @@
 			div.appendTo(document.body || document.documentElement);
 		}
 		return div;
-	}
+	};
 	
-	function tick() {
+	var tick = function() {
 		// clear timers
 		_timer1 = 0;
 		_timer2 = 0;
@@ -55,36 +55,36 @@
 		} else {
 			div.remove();
 		}
-	}
+	};
 	
 	var _timer1 = 0;
 	var _timer2 = 0;
 	
-	function stop1() {
+	var stop1 = function() {
 		if (_timer1 != 0) {
 			// stop timer
 			clearTimeout(_timer1);
 			_timer1 = 0;
 		}
-	}
-	function stop2() {
+	};
+	var stop2 = function() {
 		if (_timer2 != 0) {
 			// stop timer
 			clearTimeout(_timer2);
 			_timer2 = 0;
 		}
-	}
-	function stop() {
+	};
+	var stop = function() {
 		stop1();
 		stop2();
-	}
+	};
 	
-	function start() {
+	var start = function() {
 		stop();
 		_timer1 = setTimeout(tick, tarsier.log.interval);
-	}
+	};
 	
-	function show(info, type) {
+	var show = function(info, type) {
 		tarsier.log.history.push({type: type, message: info});
 		
 		if (typeof(info) === "string") {
@@ -97,12 +97,12 @@
 		
 		var div = tray();
 		item.appendTo(div);
-	}
+	};
 	
 	//--------------------------------------------------------------------------
 	
 	// log
-	tarsier.log = function(info) {
+	var log = function(info) {
 		// console
 		if (window.console && window.console.log) {
 			window.console.log(info);
@@ -114,7 +114,7 @@
 	};
 	
 	// warn
-	tarsier.warn = function(info) {
+	var warn = function(info) {
 		// console
 		if (window.console && window.console.warn) {
 			window.console.warn(info);
@@ -126,7 +126,7 @@
 	};
 	
 	// error
-	tarsier.error = function(info) {
+	var error = function(info) {
 		// console
 		if (window.console && window.console.error) {
 			window.console.error(info);
@@ -137,9 +137,14 @@
 		}
 	};
 	
+	// logs
+	tarsier.log = log;
+	tarsier.warn = warn;
+	tarsier.error = error;
+	
 	// configuration
 	tarsier.log.debug = true;
 	tarsier.log.interval = 5000; // timer1's interval
 	tarsier.log.history = [];
 	
-})(tarsier);
+}(tarsier);

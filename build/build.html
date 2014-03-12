@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<title>Tarsier Builder</title>
+		<script type="text/javascript" src="../config.js"></script>
+		<script type="text/javascript" src="build.js"></script>
+		<style type="text/css">
+			.content {
+				margin: 10px 20px;
+				border: 1px solid #e0e0f5;
+				padding: 5px 8px;
+				background-color: #cccccc;
+				font-family: 'Courier';
+			}
+			.annotation {
+				color: green;
+				font-style: italic;
+			}
+			footer {
+				margin: 20px 0px 10px 0px;
+				border-top: 1px dashed #e0e04c;
+				padding: 10px 20px;
+			}
+			</style>
+	</head>
+	
+	<body>
+		
+		<h1>Javascript Tools</h1>
+		<div>
+			<ul>
+				<li><a href="http://dean.edwards.name/packer/" target="_blank">http://dean.edwards.name/packer/</a></li>
+				<li><a href="http://jsbeautifier.org/" target="_blank">http://jsbeautifier.org/</a></li>
+			</ul>
+		</div>
+		
+		<h1>Building:</h1>
+		<div class="content">
+			cd Tarsier/build/ <span class="annotation"># enter build directory</span>
+		</div>
+		
+		<h2>Tarsier</h2>
+		<div id="tarsier" class="content"></div>
+		
+		<footer>
+			<div>&copy; 2014 moKy</div>
+		</footer>
+		
+	</body>
+	
+	<script language="javascript">
+		
+		var libFiles = {
+			'tarsier': tarsier.config.getFiles(),
+		};
+		
+		// compiling commands
+		function compile(tag, handler, version) {
+			var div = document.getElementById(tag);
+			var array = libFiles[tag];
+			var outfile = tag + (version ? '-v' + version : '') + '.js';
+			
+			var cc = 'echo "" > ' + outfile + ';';
+			for (var i = 0; i < array.length; ++i) {
+				cc += '<br/>\r\ncat ' + handler(array[i]) + ' >> ' + outfile + ';';
+			}
+			div.innerHTML = cc;
+		}
+		
+		// Tarsier
+		compile('tarsier', function(file) {
+				return file.replace('http://moky.github.io/Tarsier/', '../');
+				}, '1.1.0');
+		
+		</script>
+</html>

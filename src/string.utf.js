@@ -18,10 +18,10 @@
  *
  */
 
-(function(tarsier) {
+!function(tarsier) {
 
 	// convert string from 'utf-16' to 'utf-8'
-	function utf16to8(str) {
+	var utf16to8 = function(str) {
 		var out, i, len, c;
 		
 		out = "";
@@ -40,10 +40,10 @@
 			}
 		}
 		return out;
-	}
+	};
 	
 	// convert string from 'utf-8' to 'utf-16'
-	function utf8to16(str) {
+	var utf8to16 = function(str) {
 		var out, i, len, c;
 		var char2, char3;
 		
@@ -74,7 +74,7 @@
 		}
 		
 		return out;
-	}
+	};
 	
 	//--------------------------------------------------------------------------
 	
@@ -82,4 +82,4 @@
 	tarsier.setConvertor("utf-16", "utf-8", utf16to8);
 	tarsier.setConvertor("utf-8", "utf-16", utf8to16);
 	
-})(tarsier);
+}(tarsier);
