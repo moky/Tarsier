@@ -15,43 +15,44 @@ var tarsier = tarsier || {};
 !function(tarsier) {
 	'use strict';
 	
-	var dir = '/~Moky/GitHub/Tarsier/src/';
+	var dir = 'http://moky.github.io/Tarsier/';
 	
 	/*
-	 
-	 3rd remote:
-	 
-		"http://code.jquery.com/jquery.min.js"
-		"http://borismoore.github.io/jquery-tmpl/jquery.tmpl.min.js"
-		"http://jquery-xml2json-plugin.googlecode.com/svn/trunk/jquery.xml2json.js"
-//		"http://steamdev.com/snippet/js/jquery.snippet.min.js"
-//		"http://steamdev.com/snippet/css/jquery.snippet.min.css"
-//		"http://jeromeetienne.github.io/jquery-qrcode/jquery.qrcode.min.js"
-	 
-	 3rd local:
-	 
-		"3rd/jquery.min.js"
-		"3rd/jquery.tmpl.min.js"
-		"3rd/jquery.xml2json.js"
-//		"3rd/jquery.snippet.min.js"
-//		"3rd/jquery.snippet.min.css"
-//		"3rd/jquery.qrcode.min.js"
+	
+	// 3rd remote
+	var remotes = [
+		"http://code.jquery.com/jquery.min.js",
+		"http://borismoore.github.io/jquery-tmpl/jquery.tmpl.min.js",
+		"http://jquery-xml2json-plugin.googlecode.com/svn/trunk/jquery.xml2json.js",
+//		"http://steamdev.com/snippet/js/jquery.snippet.min.js",
+//		"http://steamdev.com/snippet/css/jquery.snippet.min.css",
+//		"http://jeromeetienne.github.io/jquery-qrcode/jquery.qrcode.min.js",
+	];
+	// 3rd local
+	var libs = [
+		"3rd/jquery.min.js",
+		"3rd/jquery.tmpl.min.js",
+		"3rd/jquery.xml2json.js",
+//		"3rd/jquery.snippet.min.js",
+//		"3rd/jquery.snippet.min.css",
+//		"3rd/jquery.qrcode.min.js",
+	];
 	 
 	 */
 	
 	// lib files
 	var files = [
-				 "base.js",
-				 "log.js",
-				 "object.js",
-				 "string.js",
-				 "string.utf.js",
-				 "string.gb2312.js",
-				 "string.base64.js",
-				 "xml.js",
-				 "http.js",
-				 "template.js",
-				 "widget.js",
+		"src/base.js",
+		"src/log.js",
+		"src/object.js",
+		"src/string.js",
+		"src/string.utf.js",
+		"src/string.gb2312.js",
+		"src/string.base64.js",
+		"src/xml.js",
+		"src/http.js",
+		"src/template.js",
+		"src/widget.js",
 	];
 	
 	var getFiles = function(files, root) {
