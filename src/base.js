@@ -79,12 +79,12 @@ if (typeof(window.tarsier) !== "object") {
 					alert("callback error: " + e);
 				}
 				task.finished();
-			}
+			};
 			script.onreadystatechange = function() { // IE
 				if (this.readyState === "complete") {
 					script.onload();
 				}
-			}
+			};
 			
 			// load
 			var head = doc.getElementsByTagName("head")[0] || doc.documentElement;

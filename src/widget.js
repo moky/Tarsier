@@ -135,7 +135,7 @@
 	
 	// load html
 	var load = function(url) {
-		this.html = null
+		this.html = null;
 		this.queryHtml({url: template});
 		return this;
 	};
