@@ -114,9 +114,28 @@
 			}
 		} else {
 			// base type
-			if (init.call(res, 1)) {
-				res.data[0] = parseInt(other);
-				res.negative = other < 0;
+			other = parseInt(other);
+			var neg = other < 0;
+			other = other.toString();
+			
+			var N = 3;
+			var count = Math.ceil(other.length / N);
+			var size = 1;
+			while (size < count) {
+				size += size;
+			}
+			
+			if (init.call(res, size)) {
+				for (var i = 0; i < size; ++i) {
+					var pos = other.length - N - i * N;
+					if (pos < 0) {
+						res.data[i] = parseInt(other.substring(0, pos + 3));
+						break;
+					} else {
+						res.data[i] = parseInt(other.substring(pos, pos + 3));
+					}
+				}
+				res.negative = neg;
 			}
 		}
 		
@@ -166,10 +185,10 @@
 			}
 		}
 		if (i > 0) {
-			string = string.substr(i - 1);
+			string = string.substring(i - 1);
 		}
 		
-		return this.negative ? '-' + string.substr(1) : string.substr(1);
+		return this.negative ? '-' + string.substring(1) : string.substring(1);
 	};
 	
 	var integerValue = function() {
