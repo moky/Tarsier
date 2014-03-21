@@ -113,10 +113,19 @@
 				assign.call(res, other);
 			}
 		} else {
-			// base type
-			other = parseInt(other);
-			var neg = other < 0;
+			// base type: treat it as a string
+			if (!other) other = '0';
 			other = other.toString();
+			var neg = other[0] == '-';
+			
+			// cut the tail
+			var i = other[0] == '-' || other[0] == '+' ? 1 : 0;
+			for (; i < other.length; ++i) {
+				if (other[i] < '0' || other[i] > '9') {
+					break;
+				}
+			}
+			other = other.substring(0, i);
 			
 			var N = 3;
 			var count = Math.ceil(other.length / N);
@@ -128,7 +137,7 @@
 			if (init.call(res, size)) {
 				for (var i = 0; i < size; ++i) {
 					var pos = other.length - N - i * N;
-					if (pos < 0) {
+					if (pos <= 0) {
 						res.data[i] = parseInt(other.substring(0, pos + 3));
 						break;
 					} else {
