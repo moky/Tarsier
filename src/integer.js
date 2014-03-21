@@ -25,7 +25,8 @@
 
 !function(tarsier) {
 	
-	var UNIT_MAX = 0x100000000; // 32 bits
+	//var UNIT_MAX = 0x100000000; // 32 bits
+	var UNIT_MAX = 1000;//1000*1000*1000; // 10^9 < (2^32 = 4,294,967,296)
 	
 	var Integer = function() {
 		this.data = null;
@@ -108,7 +109,7 @@
 		var res = new Integer();
 		
 		if (other instanceof Integer) {
-			if (init.call(res, other.length())) {
+			if (init.call(res, length.call(other))) {
 				assign.call(res, other);
 			}
 		} else {
@@ -133,7 +134,7 @@
 	var description = function() {
 		var len = length.call(this);
 		var string = stringValue.call(this);
-		return "&lt;Integer|len:" + len + "&gt; " + string;
+		return "&lt;Integer|Len:" + len + "&gt; " + string;
 	};
 	
 	var stringValue = function(separator) {
@@ -141,23 +142,47 @@
 			separator = ',';
 		}
 		
+		var N = 3; // numbers contain in each data item
+		
 		var data = this.data;
 		var len = length.call(this);
 		
 		var string = '';
+		var i;
 		
-		for (var i = len - 1; i >= 0; --i) {
-			var s = (data[i]).toString(16);
-			for (var j = s.length; j < 8; ++j) {
+		// concat items into a string
+		for (i = len - 1; i >= 0; --i) {
+			var s = data[i].toString();
+			for (var j = s.length; j < N; ++j) {
 				s = '0' + s;
 			}
 			string += separator + s;
 		}
-		return (this.negative ? '-0x' : '0x') + string.substr(1);
+		
+		// trim
+		for (i = 0; i < string.length; ++i) {
+			if (string[i] != '0' && string[i] != ',') {
+				break;
+			}
+		}
+		if (i > 0) {
+			string = string.substr(i - 1);
+		}
+		
+		return this.negative ? '-' + string.substr(1) : string.substr(1);
 	};
 	
 	var integerValue = function() {
-		var value = this.data ? this.data[0] : 0;
+		var value = 0;
+		if (this.data) {
+			var len = length.call(this);
+			if (len > 3) {
+				len = 3; // (1000*1000*1000 = 10^9) < (2^32 = 4,294,967,296)
+			}
+			for (var i = len - 1; i >= 0; --i) {
+				value = value * UNIT_MAX + this.data[i];
+			}
+		}
 		return this.negative ? -value : value;
 	};
 	
@@ -386,27 +411,31 @@
 		product.init(size);
 		
 		var pro;
-		var overflow = 0;
+		var overflow;
 		
 		var i, j, k;
 		
-		// part 1
 		for (i = 0; i < aLen; ++i) {
 			k = i;
+			overflow = 0;
 			for (j = 0; j < bLen; ++j, ++k) {
 				pro = this.data[i] * other.data[j] + overflow + product.data[k];
 				if (pro < UNIT_MAX) {
 					overflow = 0;
 					product.data[k] = pro;
 				} else {
-					overflow = pro / UNIT_MAX;
+					overflow = Math.floor(pro / UNIT_MAX);
 					product.data[k] = pro - overflow * UNIT_MAX;
 				}
 			}
+			if (overflow) {
+				if (i >= aLen - 1) {
+					// out of memory
+					expand.call(product);
+				}
+				product.data[k] = overflow;
+			}
 		}
-		
-		// part 2
-		product.data[k] = overflow;
 		
 		resize.call(product);
 		assign.call(this, product);
@@ -460,16 +489,11 @@
 	// static functions
 	Integer.create = create;
 	
-	// static properties
-	Integer.ONE = ONE;
-	Integer.NEG_ONE = NEG_ONE;
-	Integer.ZERO = ZERO;
-	
 	// instance functions
 	Integer.prototype.init = init;
-	Integer.prototype.resize = resize;
-	Integer.prototype.length = length;
-	Integer.prototype.expand = expand;
+//	Integer.prototype.resize = resize;
+//	Integer.prototype.length = length;
+//	Integer.prototype.expand = expand;
 	Integer.prototype.copy = copy;
 	Integer.prototype.description = description;
 	Integer.prototype.stringValue = stringValue;
