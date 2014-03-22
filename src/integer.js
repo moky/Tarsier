@@ -17,7 +17,7 @@
 
 /**
  *
- *  Processing XML
+ *  Processing Big Integer
  *
  *  Author: moKy @ Mar. 21, 2014
  *
@@ -109,9 +109,7 @@
 		var res = new Integer();
 		
 		if (other instanceof Integer) {
-			if (init.call(res, length.call(other))) {
-				assign.call(res, other);
-			}
+			assign.call(res, other);
 		} else {
 			// base type: treat it as a string
 			if (!other) other = '0';
