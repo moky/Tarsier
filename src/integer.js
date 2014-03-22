@@ -502,10 +502,12 @@
 		return compare_two(this, other) <= 0;
 	};
 	
+	// >=
 	var largeEqualsTo = function(other) {
 		return compare_two(this, other) >= 0;
 	};
 	
+	// !=
 	var notEqualsTo = function(other) {
 		return compare_two(this, other) != 0;
 	};
@@ -525,22 +527,24 @@
 	Integer.prototype.stringValue = stringValue;
 	Integer.prototype.integerValue = integerValue;
 	Integer.prototype.isZero = isZero;
+	Integer.prototype.compare = compare;
 	
-	Integer.prototype.assign = assign;
-	Integer.prototype.plus = plus;
-	Integer.prototype.minus = minus;
-	Integer.prototype.multiply = multiply;
-	Integer.prototype.plus_assign = plus_assign;
-	Integer.prototype.minus_assign = minus_assign;
-	Integer.prototype.multiply_assign = multiply_assign;
-	Integer.prototype.plus_plus = plus_plus;
-	Integer.prototype.minus_minus = minus_minus;
-	Integer.prototype.equalsTo = equalsTo;
-	Integer.prototype.smallThan = smallThan;
-	Integer.prototype.largeThan = largeThan;
-	Integer.prototype.smallEqualsTo = smallEqualsTo;
-	Integer.prototype.largeEqualsTo = largeEqualsTo;
-	Integer.prototype.notEqualsTo = notEqualsTo;
+	Integer.prototype.assign = assign;                   // =
+	Integer.prototype.plus = plus;                       // +
+	Integer.prototype.minus = minus;                     // -
+	Integer.prototype.multiply = multiply;               // *
+	Integer.prototype.plus_assign = plus_assign;         // +=
+	Integer.prototype.minus_assign = minus_assign;       // -=
+	Integer.prototype.multiply_assign = multiply_assign; // *=
+	Integer.prototype.plus_plus = plus_plus;             // ++
+	Integer.prototype.minus_minus = minus_minus;         // --
+	
+	Integer.prototype.equalsTo = equalsTo;               // ==
+	Integer.prototype.smallThan = smallThan;             // <
+	Integer.prototype.largeThan = largeThan;             // >
+	Integer.prototype.smallEqualsTo = smallEqualsTo;     // <=
+	Integer.prototype.largeEqualsTo = largeEqualsTo;     // >=
+	Integer.prototype.notEqualsTo = notEqualsTo;         // !=
 	
 	tarsier.Integer = Integer;
 	
