@@ -70,7 +70,7 @@
 			// assert(tx != null, "It's impossible!");
 		}
 		
-		var dx = get_cache(x, i + t) // x ^ (i+t)
+		var dx = get_cache(x, i + t); // x ^ (i+t)
 		if (dx) {
 			fx = dx; // cache value
 			if (callback) callback(x, i + t, fx, true);
