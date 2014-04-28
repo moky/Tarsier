@@ -130,6 +130,16 @@
 	var applyHead = function(data, document) {
 		var p1, p2;
 		
+		// reset document.title
+		p1 = data.indexOf("<title>");
+		if (p1 > 0) {
+			p1 += 7;
+			p2 = data.indexOf("</title>", p1);
+			if (p2 > p1) {
+				document.title = data.substring(p1, p2);
+			}
+		}
+		
 		// import style sheets
 		p2 = 0;
 		while ((p1 = data.indexOf("<link ", p2)) > 0) {
