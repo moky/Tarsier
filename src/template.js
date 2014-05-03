@@ -55,11 +55,11 @@
 				
 				url = html.substring(p1, p2);
 				if (url.indexOf("://") > 0) {
-					res += tarsier.uri.trim(url);
+					res += tarsier.URI.trim(url);
 				} else if (url[0] === '/') {
-					res += tarsier.uri.trim(domain + url);
+					res += tarsier.URI.trim(domain + url);
 				} else {
-					res += tarsier.uri.trim(path + url);
+					res += tarsier.URI.trim(path + url);
 				}
 			}
 			res += html.substring(p2);
@@ -68,7 +68,7 @@
 		
 		if (url) {
 			// process base url
-			var path = tarsier.uri.parse(url).path;
+			var path = tarsier.URI.parse(url).path;
 			var domain = url.substring(0, url.indexOf(path));
 			
 			html = standardize_urls(html, " href=\"", "\"", domain, path);

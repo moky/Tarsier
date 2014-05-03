@@ -56,7 +56,7 @@
 		var url = args.url;
 		var type = "html";
 		// query template
-		tarsier.http.ajax({
+		tarsier.HTTP.ajax({
 						  url: url,
 						  dataType: type,
 						  //cache: false,
@@ -81,7 +81,7 @@
 		var url = args.url;
 		var type = args.type || "xml";
 		// query data
-		tarsier.http.ajax({
+		tarsier.HTTP.ajax({
 						  url: url,
 						  dataType: type,
 						  //cache: false,
@@ -106,7 +106,7 @@
 		var url = args.url;
 		var type = "html";
 		// query html
-		tarsier.http.ajax({
+		tarsier.HTTP.ajax({
 						  url: url,
 						  dataType: type,
 						  //cache: false,
