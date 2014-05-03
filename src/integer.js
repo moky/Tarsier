@@ -163,11 +163,7 @@
 		return "&lt;Integer|Len:" + len + "&gt; " + string;
 	};
 	
-	var stringValue = function(separator) {
-		if (arguments.length === 0) {
-			separator = ',';
-		}
-		
+	var stringValue = function() {
 		var N = 3; // numbers contain in each data item
 		
 		var data = this.data;
@@ -182,12 +178,12 @@
 			for (var j = s.length; j < N; ++j) {
 				s = '0' + s;
 			}
-			string += separator + s;
+			string += s;
 		}
 		
 		// trim
 		for (i = 0; i < string.length; ++i) {
-			if (string[i] != '0' && string[i] != ',') {
+			if (string[i] != '0') {
 				break;
 			}
 		}
