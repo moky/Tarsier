@@ -181,14 +181,14 @@
 	
 	//--------------------------------------------------------------------------
 	
-	// namespace: uri
-	tarsier.uri = {
+	// namespace: URI
+	tarsier.URI = {
 		parse: parse,
 		trim: trim,
-	}; // EOF 'tarsier.uri'
+	}; // EOF 'tarsier.URI'
 	
-	// namespace: http
-	tarsier.http = {
+	// namespace: HTTP
+	tarsier.HTTP = {
 		/**
 		 *  HTTP Request
 		 */
@@ -204,6 +204,6 @@
 			}
 		}
 		
-	}; // EOF 'tarsier.http'
+	}; // EOF 'tarsier.HTTP'
 	
 }(tarsier);
