@@ -45,6 +45,7 @@ var tarsier = tarsier || {};
 		"src/base.js",
 		"src/log.js",
 		"src/object.js",
+		"src/number.js",
 		"src/integer.js",
 		"src/math.js",
 		"src/string.js",
