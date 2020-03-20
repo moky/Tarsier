@@ -199,29 +199,45 @@ if (typeof tarsier.ui !== "object") {
 ! function(ns) {
     var $ = ns.$;
     var Point = ns.Point;
+    var touch_point = function(ev) {
+        if (ev.touches) {
+            var touch = ev.touches[0];
+            return new Point(touch.clientX, touch.clientY)
+        } else {
+            return new Point(ev.clientX, ev.clientY)
+        }
+    };
     var enable = function(div) {
         div.draggable = true;
         div.__dp = null;
-        div.ondragstart = function(ev) {
-            var x = ev.clientX - div.offsetLeft;
-            var y = ev.clientY - div.offsetTop;
-            div.__dp = new Point(x, y);
+        var drag_start = function(ev) {
+            var point = touch_point(ev);
+            point.x -= div.offsetLeft;
+            point.y -= div.offsetTop;
+            div.__dp = point;
             $(div).floatToTop();
             return true
         };
-        div.ondrag = div.ondragover = function(ev) {
+        var drag_move = function(ev) {
             ev.preventDefault();
             var delta = div.__dp;
             if (delta) {
-                var x = ev.clientX - delta.x;
-                var y = ev.clientY - delta.y;
-                $(div).setOrigin(new Point(x, y))
+                var point = touch_point(ev);
+                point.x -= delta.x;
+                point.y -= delta.y;
+                $(div).setOrigin(point)
             }
         };
-        div.ondragend = function(ev) {
+        var drag_end = function(ev) {
             ev.preventDefault();
             div.__dp = null
-        }
+        };
+        div.ondragstart = drag_start;
+        div.ondrag = div.ondragover = drag_move;
+        div.ondragend = drag_end;
+        div.addEventListener("touchstart", drag_start);
+        div.addEventListener("touchmove", drag_move);
+        div.addEventListener("touchend", drag_end)
     };
     var disable = function(div) {
         div.draggable = false
