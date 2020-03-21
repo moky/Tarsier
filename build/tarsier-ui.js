@@ -726,7 +726,7 @@ if (typeof tarsier.ui !== "object") {
     };
     TableView.prototype = Object.create(ScrollView.prototype);
     TableView.prototype.constructor = TableView;
-    TableView.prototype.refresh = function() {
+    TableView.prototype.reloadData = function() {
         this.removeChildren();
         var count = this.dataSource.numberOfSections(this);
         for (var section = 0; section < count; ++section) {

@@ -227,7 +227,7 @@
     TableView.prototype = Object.create(ScrollView.prototype);
     TableView.prototype.constructor = TableView;
 
-    TableView.prototype.refresh = function () {
+    TableView.prototype.reloadData = function () {
         // clear table
         this.removeChildren();
         // add sections one by one
