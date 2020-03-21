@@ -39,11 +39,10 @@
         var vc = this;
         var ie = this.__ie;
         ie.onclick = function (ev) {
-            vc.onClick(ev);
             ev.cancelBubble = true;
             ev.stopPropagation();
             ev.preventDefault();
-            return false;
+            vc.onClick(ev);
         };
         this.__image = null;
     };

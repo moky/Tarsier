@@ -43,11 +43,6 @@
         var ctrl = this;
         var element = this.__ie;
 
-        Draggable.enable(element);
-        element.onclick = function (ev) {
-            ctrl.floatToTop();
-        };
-
         // init title
         var title = new View();
         title.setClassName('ts_window_title');
@@ -73,6 +68,11 @@
             frame = new Rect(frame);
         }
         this.setFrame(frame);
+
+        Draggable.enable(this, [title]);
+        element.onclick = function (ev) {
+            ctrl.floatToTop();
+        };
     };
     Window.prototype = Object.create(View.prototype);
     Window.prototype.constructor = Window;

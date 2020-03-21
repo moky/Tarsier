@@ -199,48 +199,106 @@ if (typeof tarsier.ui !== "object") {
 ! function(ns) {
     var $ = ns.$;
     var Point = ns.Point;
-    var touch_point = function(ev) {
-        if (ev.touches) {
-            var touch = ev.touches[0];
-            return new Point(touch.clientX, touch.clientY)
-        } else {
-            return new Point(ev.clientX, ev.clientY)
-        }
+    var cancel_bubble = function(ev) {
+        ev.cancelBubble = true;
+        ev.stopPropagation();
+        ev.preventDefault()
     };
-    var enable = function(div) {
+    var start = function(point, controller) {
+        var div = controller.__ie;
+        point.x -= div.offsetLeft;
+        point.y -= div.offsetTop;
+        controller.floatToTop();
+        div.__dp = point
+    };
+    var move = function(ev, point, controller) {
+        var div = controller.__ie;
+        if (!div.__dp) {
+            return
+        }
+        point.x -= div.__dp.x;
+        point.y -= div.__dp.y;
+        controller.setOrigin(point);
+        cancel_bubble(ev)
+    };
+    var end = function(ev, controller) {
+        var div = controller.__ie;
+        if (!div.__dp) {
+            return
+        }
+        cancel_bubble(ev);
+        div.__dp = null
+    };
+    var enable = function(controller, dragAreas) {
+        controller = $(controller);
+        if (dragAreas) {
+            if (!(dragAreas instanceof Array)) {
+                dragAreas = [dragAreas]
+            }
+            controller.dragAreas = [];
+            for (var i = 0; i < dragAreas.length; ++i) {
+                controller.dragAreas.push($(dragAreas[i]).__ie)
+            }
+        }
+        var div = controller.__ie;
         div.draggable = true;
         div.__dp = null;
         var drag_start = function(ev) {
-            var point = touch_point(ev);
-            point.x -= div.offsetLeft;
-            point.y -= div.offsetTop;
-            div.__dp = point;
-            $(div).floatToTop();
+            start(new Point(ev.clientX, ev.clientY), controller);
             return true
         };
         var drag_move = function(ev) {
-            ev.preventDefault();
-            var delta = div.__dp;
-            if (delta) {
-                var point = touch_point(ev);
-                point.x -= delta.x;
-                point.y -= delta.y;
-                $(div).setOrigin(point)
-            }
+            move(ev, new Point(ev.clientX, ev.clientY), controller)
         };
         var drag_end = function(ev) {
-            ev.preventDefault();
-            div.__dp = null
+            end(ev, controller)
+        };
+        var touch_start = function(ev) {
+            if (ev.target !== div) {
+                if (controller.dragAreas) {
+                    if (controller.dragAreas.indexOf(ev.target) < 0) {
+                        return true
+                    }
+                } else {
+                    return true
+                }
+            }
+            var touch = ev.touches[0];
+            start(new Point(touch.clientX, touch.clientY), controller);
+            return true
+        };
+        var touch_move = function(ev) {
+            var touch = ev.touches[0];
+            move(ev, new Point(touch.clientX, touch.clientY), controller)
+        };
+        var touch_end = function(ev) {
+            end(ev, controller)
         };
         div.ondragstart = drag_start;
         div.ondrag = div.ondragover = drag_move;
         div.ondragend = drag_end;
-        div.addEventListener("touchstart", drag_start);
-        div.addEventListener("touchmove", drag_move);
-        div.addEventListener("touchend", drag_end)
+        div.ontouchstart = touch_start;
+        div.ontouchmove = touch_move;
+        div.ontouchend = touch_end;
+        div.addEventListener("touchstart", touch_start, false);
+        div.addEventListener("touchmove", touch_move, false);
+        div.addEventListener("touchend", touch_end, false)
     };
-    var disable = function(div) {
-        div.draggable = false
+    var disable = function(controller) {
+        controller = $(controller);
+        controller.dragAreas = null;
+        var div = controller.__ie;
+        div.draggable = false;
+        delete div.__dp;
+        div.ondragstart = null;
+        div.ondrag = div.ondragover = null;
+        div.ondragend = null;
+        div.removeEventListener("touchstart", div.ontouchstart, false);
+        div.removeEventListener("touchmove", div.ontouchmove, false);
+        div.removeEventListener("touchend", div.ontouchend, false);
+        div.ontouchstart = null;
+        div.ontouchmove = null;
+        div.ontouchend = null
     };
     ns.Draggable = {
         enable: enable,
@@ -660,11 +718,10 @@ if (typeof tarsier.ui !== "object") {
         var vc = this;
         var ie = this.__ie;
         ie.onclick = function(ev) {
-            vc.onClick(ev);
             ev.cancelBubble = true;
             ev.stopPropagation();
             ev.preventDefault();
-            return false
+            vc.onClick(ev)
         };
         this.__image = null
     };
@@ -710,10 +767,6 @@ if (typeof tarsier.ui !== "object") {
         this.setClassName("ts_window");
         var ctrl = this;
         var element = this.__ie;
-        Draggable.enable(element);
-        element.onclick = function(ev) {
-            ctrl.floatToTop()
-        };
         var title = new View();
         title.setClassName("ts_window_title");
         this.appendChild(title);
@@ -737,7 +790,11 @@ if (typeof tarsier.ui !== "object") {
                 }
             }
         }
-        this.setFrame(frame)
+        this.setFrame(frame);
+        Draggable.enable(this, [title]);
+        element.onclick = function(ev) {
+            ctrl.floatToTop()
+        }
     };
     Window.prototype = Object.create(View.prototype);
     Window.prototype.constructor = Window;
