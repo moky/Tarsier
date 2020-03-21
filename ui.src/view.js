@@ -58,6 +58,9 @@
         this.__ie.id = id;
     };
 
+    View.prototype.getClassName = function () {
+        return this.__ie.className;
+    };
     View.prototype.setClassName = function (clazz) {
         var name = this.__ie.className;
         if (name) {
@@ -164,8 +167,18 @@
 
     View.prototype.getOrigin = function () {
         if (this.__frame.origin.equals(Point.Zero)) {
-            var x = parse_int(this.__ie.style.left);
-            var y = parse_int(this.__ie.style.top);
+            var x;
+            if (this.__ie.style.left) {
+                x = parse_int(this.__ie.style.left);
+            } else {
+                x = this.__ie.offsetLeft;
+            }
+            var y;
+            if (this.__ie.style.top) {
+                y = parse_int(this.__ie.style.top);
+            } else {
+                y = this.__ie.offsetTop;
+            }
             this.__frame.origin = new Point(x, y);
         }
         return this.__frame.origin;
@@ -186,8 +199,18 @@
 
     View.prototype.getSize = function () {
         if (this.__frame.size.equals(Size.Zero)) {
-            var width = parse_int(this.__ie.style.width);
-            var height = parse_int(this.__ie.style.height);
+            var width;
+            if (this.__ie.style.width) {
+                width = parse_int(this.__ie.style.width);
+            } else {
+                width = this.__ie.offsetWidth;
+            }
+            var height;
+            if (this.__ie.style.height) {
+                height = parse_int(this.__ie.style.height);
+            } else {
+                height = this.__ie.offsetHeight;
+            }
             this.__frame.size = new Size(width, height);
         }
         return this.__frame.size;

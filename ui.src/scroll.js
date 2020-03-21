@@ -30,8 +30,9 @@
 
     var View = ns.View;
 
-    var ScrollView = function (span) {
-        View.call(this, span);
+    var ScrollView = function (div) {
+        View.call(this, div);
+        this.setScroll(true);
     };
     ScrollView.prototype = Object.create(View.prototype);
     ScrollView.prototype.constructor = ScrollView;

@@ -329,6 +329,9 @@ if (typeof tarsier.ui !== "object") {
     View.prototype.setId = function(id) {
         this.__ie.id = id
     };
+    View.prototype.getClassName = function() {
+        return this.__ie.className
+    };
     View.prototype.setClassName = function(clazz) {
         var name = this.__ie.className;
         if (name) {
@@ -415,8 +418,18 @@ if (typeof tarsier.ui !== "object") {
     };
     View.prototype.getOrigin = function() {
         if (this.__frame.origin.equals(Point.Zero)) {
-            var x = parse_int(this.__ie.style.left);
-            var y = parse_int(this.__ie.style.top);
+            var x;
+            if (this.__ie.style.left) {
+                x = parse_int(this.__ie.style.left)
+            } else {
+                x = this.__ie.offsetLeft
+            }
+            var y;
+            if (this.__ie.style.top) {
+                y = parse_int(this.__ie.style.top)
+            } else {
+                y = this.__ie.offsetTop
+            }
             this.__frame.origin = new Point(x, y)
         }
         return this.__frame.origin
@@ -435,8 +448,18 @@ if (typeof tarsier.ui !== "object") {
     };
     View.prototype.getSize = function() {
         if (this.__frame.size.equals(Size.Zero)) {
-            var width = parse_int(this.__ie.style.width);
-            var height = parse_int(this.__ie.style.height);
+            var width;
+            if (this.__ie.style.width) {
+                width = parse_int(this.__ie.style.width)
+            } else {
+                width = this.__ie.offsetWidth
+            }
+            var height;
+            if (this.__ie.style.height) {
+                height = parse_int(this.__ie.style.height)
+            } else {
+                height = this.__ie.offsetHeight
+            }
             this.__frame.size = new Size(width, height)
         }
         return this.__frame.size
@@ -597,8 +620,9 @@ if (typeof tarsier.ui !== "object") {
 }(tarsier.ui);
 ! function(ns) {
     var View = ns.View;
-    var ScrollView = function(span) {
-        View.call(this, span)
+    var ScrollView = function(div) {
+        View.call(this, div);
+        this.setScroll(true)
     };
     ScrollView.prototype = Object.create(View.prototype);
     ScrollView.prototype.constructor = ScrollView;
@@ -627,6 +651,151 @@ if (typeof tarsier.ui !== "object") {
         this.__ie.style.overflowY = overflow
     };
     ns.ScrollView = ScrollView
+}(tarsier.ui);
+! function(ns) {
+    var IndexPath = function(section, row) {
+        this.row = row;
+        this.section = section
+    };
+    IndexPath.prototype.toString = function() {
+        return "(" + this.row + "," + this.section + ")"
+    };
+    var TableViewDataSource = function() {};
+    TableViewDataSource.prototype.numberOfSections = function(tableView) {
+        return 1
+    };
+    TableViewDataSource.prototype.titleForHeaderInSection = function(section, tableView) {
+        return null
+    };
+    TableViewDataSource.prototype.titleForFooterInSection = function(section, tableView) {
+        return null
+    };
+    TableViewDataSource.prototype.numberOfRowsInSection = function(section, tableView) {
+        console.assert(false, "implement me!");
+        return 0
+    };
+    TableViewDataSource.prototype.cellForRowAtIndexPath = function(indexPath, tableView) {
+        console.assert(false, "implement me!");
+        return null
+    };
+    ns.IndexPath = IndexPath;
+    ns.TableViewDataSource = TableViewDataSource
+}(tarsier.ui);
+! function(ns) {
+    var TableViewDelegate = function() {};
+    TableViewDelegate.prototype.heightForHeaderInSection = function(section, tableView) {
+        return 16
+    };
+    TableViewDelegate.prototype.heightForFooterInSection = function(section, tableView) {
+        return 16
+    };
+    TableViewDelegate.prototype.viewForHeaderInSection = function(section, tableView) {
+        return null
+    };
+    TableViewDelegate.prototype.viewForFooterInSection = function(section, tableView) {
+        return null
+    };
+    TableViewDelegate.prototype.heightForRowAtIndexPath = function(indexPath, tableView) {
+        return 64
+    };
+    TableViewDelegate.prototype.didSelectRowAtIndexPath = function(indexPath, tableView) {};
+    ns.TableViewDelegate = TableViewDelegate
+}(tarsier.ui);
+! function(ns) {
+    var View = ns.View;
+    var TableViewCell = function(cell) {
+        View.call(this, cell);
+        this.setClassName("ts_cell")
+    };
+    TableViewCell.prototype = Object.create(View.prototype);
+    TableViewCell.prototype.constructor = TableViewCell;
+    ns.TableViewCell = TableViewCell
+}(tarsier.ui);
+! function(ns) {
+    var $ = ns.$;
+    var View = ns.View;
+    var ScrollView = ns.ScrollView;
+    var IndexPath = ns.IndexPath;
+    var TableView = function(table) {
+        ScrollView.call(this, table);
+        this.setClassName("ts_table");
+        this.setScrollX(false);
+        this.setScrollY(true);
+        this.dataSource = null;
+        this.delegate = null
+    };
+    TableView.prototype = Object.create(ScrollView.prototype);
+    TableView.prototype.constructor = TableView;
+    TableView.prototype.refresh = function() {
+        this.removeChildren();
+        var count = this.dataSource.numberOfSections(this);
+        for (var section = 0; section < count; ++section) {
+            show_section.call(this, section)
+        }
+    };
+    var show_section = function(section) {
+        var clazz;
+        var header = section_header.call(this, section);
+        if (header) {
+            clazz = header.getClassName();
+            if (!clazz || clazz.indexOf("ts_header") < 0) {
+                header.setClassName("ts_header")
+            }
+            this.appendChild(header)
+        }
+        var indexPath, cell;
+        var count = this.dataSource.numberOfRowsInSection(section, this);
+        for (var row = 0; row < count; ++row) {
+            indexPath = new IndexPath(section, row);
+            cell = this.dataSource.cellForRowAtIndexPath(indexPath, this);
+            clazz = cell.getClassName();
+            if (!clazz || clazz.indexOf("ts_cell") < 0) {
+                cell.setClassName("ts_cell")
+            }
+            this.appendChild(cell)
+        }
+        var footer = section_footer.call(this, section);
+        if (footer) {
+            clazz = footer.getClassName();
+            if (!clazz || clazz.indexOf("ts_footer") < 0) {
+                footer.setClassName("ts_footer")
+            }
+            this.appendChild(footer)
+        }
+    };
+    var section_header = function(section) {
+        var header = this.delegate.viewForHeaderInSection(section, this);
+        if (header) {
+            return $(header)
+        }
+        var title = this.delegate.titleForHeaderInSection(section, this);
+        if (title) {
+            header = new ns.View();
+            header.setClassName("ts_header");
+            header.setText(title)
+        }
+        return header
+    };
+    var section_footer = function(section) {
+        var footer = this.delegate.viewForFooterInSection(section, this);
+        if (footer) {
+            return $(footer)
+        }
+        var title = this.delegate.titleForFooterInSection(section, this);
+        if (title) {
+            footer = new ns.View();
+            footer.setClassName("ts_footer");
+            footer.setText(title)
+        }
+        return footer
+    };
+    View.prototype.removeChildren = function() {
+        var children = this.getChildren();
+        for (var i = 0; i < children.length; ++i) {
+            this.removeChild(children[i])
+        }
+    };
+    ns.TableView = TableView
 }(tarsier.ui);
 ! function(ns) {
     var Color = ns.Color;
