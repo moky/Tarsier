@@ -650,6 +650,9 @@ if (typeof tarsier.ui !== "object") {
         }
         this.__ie.style.overflowY = overflow
     };
+    View.prototype.scrollToBottom = function() {
+        this.__ie.scrollTop = this.__ie.scrollHeight;
+    };
     ns.ScrollView = ScrollView
 }(tarsier.ui);
 ! function(ns) {

@@ -65,6 +65,10 @@
         this.__ie.style.overflowY = overflow;
     };
 
+    View.prototype.scrollToBottom = function () {
+        this.__ie.scrollTop = this.__ie.scrollHeight;
+    };
+
     //-------- namespace --------
     ns.ScrollView = ScrollView;
 
