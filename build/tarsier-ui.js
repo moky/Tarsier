@@ -307,10 +307,7 @@ if (typeof tarsier.ui !== "object") {
 }(tarsier.ui);
 ! function(ns) {
     var $ = ns.$;
-    var Point = ns.Point;
-    var Size = ns.Size;
     var Rect = ns.Rect;
-    var Edges = ns.Edges;
     var Color = ns.Color;
     var View = function(div) {
         Object.call(this);
@@ -393,113 +390,6 @@ if (typeof tarsier.ui !== "object") {
         child = $(child);
         return this.__ie.contains(child.__ie)
     };
-    var parse_int = function(value) {
-        var i = parseInt(value);
-        if (typeof i === "number") {
-            return i
-        } else {
-            return 0
-        }
-    };
-    View.prototype.getFrame = function() {
-        if (this.__frame.equals(Rect.Zero)) {
-            var origin = this.getOrigin();
-            var size = this.getSize();
-            this.__frame = new Rect(origin, size)
-        }
-        return this.__frame
-    };
-    View.prototype.setFrame = function(frame) {
-        if (this.__frame.equals(frame)) {
-            return
-        }
-        this.setOrigin(frame.origin);
-        this.setSize(frame.size)
-    };
-    View.prototype.getOrigin = function() {
-        if (this.__frame.origin.equals(Point.Zero)) {
-            var x;
-            if (this.__ie.style.left) {
-                x = parse_int(this.__ie.style.left)
-            } else {
-                x = this.__ie.offsetLeft
-            }
-            var y;
-            if (this.__ie.style.top) {
-                y = parse_int(this.__ie.style.top)
-            } else {
-                y = this.__ie.offsetTop
-            }
-            this.__frame.origin = new Point(x, y)
-        }
-        return this.__frame.origin
-    };
-    View.prototype.setOrigin = function(point) {
-        if (arguments.length === 2) {
-            point = new Point(arguments[0], arguments[1])
-        }
-        if (this.__frame.origin.equals(point)) {
-            return
-        }
-        this.__ie.style.position = "absolute";
-        this.__ie.style.left = point.x + "px";
-        this.__ie.style.top = point.y + "px";
-        this.__frame.origin = point
-    };
-    View.prototype.getSize = function() {
-        if (this.__frame.size.equals(Size.Zero)) {
-            var width;
-            if (this.__ie.style.width) {
-                width = parse_int(this.__ie.style.width)
-            } else {
-                width = this.__ie.offsetWidth
-            }
-            var height;
-            if (this.__ie.style.height) {
-                height = parse_int(this.__ie.style.height)
-            } else {
-                height = this.__ie.offsetHeight
-            }
-            this.__frame.size = new Size(width, height)
-        }
-        return this.__frame.size
-    };
-    View.prototype.setSize = function(size) {
-        if (arguments.length === 2) {
-            size = new Size(arguments[0], arguments[1])
-        }
-        if (this.__frame.size.equals(size)) {
-            return
-        }
-        this.__ie.style.width = size.width + "px";
-        this.__ie.style.height = size.height + "px";
-        var edges = this.getPadding();
-        this.__frame.size = size;
-        var x = edges.left;
-        var y = edges.top;
-        var width = size.width - edges.left - edges.right;
-        var height = size.height - edges.top - edges.bottom;
-        var bounds = new Rect(new Point(x, y), new Size(width, height));
-        this.setBounds(bounds)
-    };
-    View.prototype.getBounds = function() {
-        if (this.__bounds.equals(Rect.Zero)) {}
-        return this.__bounds
-    };
-    View.prototype.setBounds = function(bounds) {
-        if (this.__bounds.equals(bounds)) {
-            return
-        }
-        var frame = this.__frame;
-        var left = bounds.origin.x;
-        var top = bounds.origin.y;
-        var right = frame.size.width - left - bounds.size.width;
-        var bottom = frame.size.height - top - bounds.size.height;
-        this.setPadding(top + "px " + right + "px " + bottom + "px " + left + "px");
-        this.needsLayoutSubviews = true;
-        this.__bounds = bounds;
-        this.layoutSubviews()
-    };
     View.prototype.layoutSubviews = function() {
         if (!this.needsLayoutSubviews) {
             return
@@ -509,80 +399,6 @@ if (typeof tarsier.ui !== "object") {
             children[i].layoutSubviews()
         }
         this.needsLayoutSubviews = false
-    };
-    View.prototype.setMargin = function(margin) {
-        if (typeof margin === "number") {
-            margin = margin + "px"
-        }
-        this.__ie.style.margin = margin
-    };
-    View.prototype.setBorder = function(border) {
-        if (typeof border === "number") {
-            border = border + "px"
-        }
-        this.__ie.style.border = border
-    };
-    View.prototype.getPadding = function() {
-        var padding = this.__ie.style.padding;
-        var left, top, right, bottom;
-        if (padding && padding.length > 0) {
-            var values = padding.split(" ");
-            if (values.length === 1) {
-                left = top = right = bottom = parse_int(values[0])
-            } else {
-                if (values.length === 2) {
-                    top = bottom = parse_int(values[0]);
-                    left = right = parse_int(values[1])
-                } else {
-                    if (values.length === 3) {
-                        top = parse_int(values[0]);
-                        left = right = parse_int(values[1]);
-                        bottom = parse_int(values[2])
-                    } else {
-                        if (values.length === 4) {
-                            top = parse_int(values[0]);
-                            right = parse_int(values[1]);
-                            bottom = parse_int(values[2]);
-                            left = parse_int(values[3])
-                        } else {
-                            throw Error("padding error: " + padding)
-                        }
-                    }
-                }
-            }
-        } else {
-            var frame = this.__frame;
-            var bounds = this.__bounds;
-            if (bounds.equals(Rect.Zero) || frame.equals(Rect.Zero)) {
-                left = top = right = bottom = 0
-            } else {
-                left = bounds.origin.x;
-                top = bounds.origin.y;
-                right = frame.size.width - left - bounds.size.width;
-                bottom = frame.size.height - top - bounds.size.height
-            }
-        }
-        return new Edges(left, top, right, bottom)
-    };
-    View.prototype.setPadding = function(padding) {
-        if (padding instanceof Edges) {
-            var left = padding.left;
-            var top = padding.top;
-            var right = padding.right;
-            var bottom = padding.bottom;
-            padding = top + "px " + right + "px " + bottom + "px " + left + "px"
-        } else {
-            if (typeof padding === "number") {
-                padding = padding + "px"
-            }
-        }
-        this.__ie.style.padding = padding
-    };
-    View.prototype.getZ = function() {
-        return parse_int(this.__ie.style.zIndex)
-    };
-    View.prototype.setZ = function(zIndex) {
-        this.__ie.style.zIndex = zIndex
     };
     View.prototype.floatToTop = function() {
         var parent = this.getParent();
@@ -619,6 +435,339 @@ if (typeof tarsier.ui !== "object") {
     ns.View = View
 }(tarsier.ui);
 ! function(ns) {
+    var Point = ns.Point;
+    var Size = ns.Size;
+    var Rect = ns.Rect;
+    var Edges = ns.Edges;
+    var View = ns.View;
+    var parse_int = function(value, defaultValue) {
+        if (value) {
+            var i = parseInt(value);
+            if (typeof i === "number") {
+                return i
+            }
+        }
+        return defaultValue
+    };
+    View.prototype.getX = function() {
+        return parse_int(this.__ie.style.left, this.__ie.offsetLeft)
+    };
+    View.prototype.getY = function() {
+        return parse_int(this.__ie.style.top, this.__ie.offsetTop)
+    };
+    View.prototype.getZ = function() {
+        return parse_int(this.__ie.style.zIndex, 0)
+    };
+    View.prototype.setX = function(left) {
+        this.__ie.style.position = "absolute";
+        this.__ie.style.left = left + "px";
+        this.__ie.offsetLeft = this.__frame.origin.x = left
+    };
+    View.prototype.setY = function(top) {
+        this.__ie.style.position = "absolute";
+        this.__ie.style.top = top + "px";
+        this.__ie.offsetTop = this.__frame.origin.y = top
+    };
+    View.prototype.setZ = function(zIndex) {
+        this.__ie.style.zIndex = zIndex
+    };
+    View.prototype.getWidth = function() {
+        return parse_int(this.__ie.style.width, this.__ie.offsetWidth)
+    };
+    View.prototype.getHeight = function() {
+        return parse_int(this.__ie.style.height, this.__ie.offsetHeight)
+    };
+    View.prototype.setWidth = function(width) {
+        this.__ie.style.width = width + "px";
+        this.__ie.offsetWidth = this.__frame.size.width = width;
+        this.__bounds.size.width = width - this.__bounds.origin.x - this.getPaddingRight();
+        this.needsLayoutSubviews = true
+    };
+    View.prototype.setHeight = function(height) {
+        this.__ie.style.height = height + "px";
+        this.__ie.offsetHeight = this.__frame.size.height = height;
+        this.__bounds.size.height = height - this.__bounds.origin.y - this.getPaddingBottom();
+        this.needsLayoutSubviews = true
+    };
+    View.prototype.getFrame = function() {
+        if (this.__frame.equals(Rect.Zero)) {
+            var origin = this.getOrigin();
+            var size = this.getSize();
+            this.__frame = new Rect(origin, size)
+        }
+        return this.__frame
+    };
+    View.prototype.setFrame = function(frame) {
+        if (this.__frame.equals(frame)) {
+            return
+        }
+        this.setOrigin(frame.origin);
+        this.setSize(frame.size)
+    };
+    View.prototype.getOrigin = function() {
+        if (this.__frame.origin.equals(Point.Zero)) {
+            var x = this.getX();
+            var y = this.getY();
+            this.__frame.origin = new Point(x, y)
+        }
+        return this.__frame.origin
+    };
+    View.prototype.setOrigin = function(point) {
+        if (arguments.length === 2) {
+            point = new Point(arguments[0], arguments[1])
+        }
+        if (this.__frame.origin.equals(point)) {
+            return
+        }
+        this.setX(point.x);
+        this.setY(point.y)
+    };
+    View.prototype.getSize = function() {
+        if (this.__frame.size.equals(Size.Zero)) {
+            var width = this.getWidth();
+            var height = this.getHeight();
+            this.__frame.size = new Size(width, height)
+        }
+        return this.__frame.size
+    };
+    View.prototype.setSize = function(size) {
+        if (arguments.length === 2) {
+            size = new Size(arguments[0], arguments[1])
+        }
+        if (this.__frame.size.equals(size)) {
+            return
+        }
+        this.setWidth(size.width);
+        this.setHeight(size.height)
+    };
+    View.prototype.getBounds = function() {
+        if (this.__bounds.equals(Rect.Zero)) {
+            var size = this.getSize();
+            var edges = this.getPadding();
+            this.__bounds.origin.x = edges.left;
+            this.__bounds.origin.y = edges.top;
+            this.__bounds.size.width = size.width - edges.left - edges.right;
+            this.__bounds.size.height = size.height - edges.top - edges.bottom
+        }
+        return this.__bounds
+    };
+    View.prototype.setBounds = function(bounds) {
+        if (this.__bounds.equals(bounds)) {
+            return
+        }
+        var frame = this.__frame;
+        var left = bounds.origin.x;
+        var top = bounds.origin.y;
+        var right = frame.size.width - left - bounds.size.width;
+        var bottom = frame.size.height - top - bounds.size.height;
+        this.setPadding(new Edges(left, top, right, bottom))
+    }
+}(tarsier.ui);
+! function(ns) {
+    var Rect = ns.Rect;
+    var Edges = ns.Edges;
+    var View = ns.View;
+    View.prototype.getPadding = function() {
+        var left = this.getPaddingLeft();
+        var right = this.getPaddingRight();
+        var top = this.getPaddingTop();
+        var bottom = this.getPaddingBottom();
+        return new Edges(left, top, right, bottom)
+    };
+    View.prototype.setPadding = function(padding) {
+        var left, top, right, bottom;
+        if (padding instanceof Edges) {
+            left = padding.left;
+            top = padding.top;
+            right = padding.right;
+            bottom = padding.bottom;
+            padding = top + "px " + right + "px " + bottom + "px " + left + "px"
+        } else {
+            if (typeof padding === "number") {
+                left = top = right = bottom = padding;
+                padding = padding + "px"
+            } else {
+                if (typeof padding === "string") {
+                    var values = padding.split(" ");
+                    if (values.length === 1) {
+                        left = top = right = bottom = parseInt(values[0])
+                    } else {
+                        if (values.length === 2) {
+                            top = bottom = parseInt(values[0]);
+                            left = right = parseInt(values[1])
+                        } else {
+                            if (values.length === 3) {
+                                top = parseInt(values[0]);
+                                left = right = parseInt(values[1]);
+                                bottom = parseInt(values[2])
+                            } else {
+                                if (values.length === 4) {
+                                    top = parseInt(values[0]);
+                                    right = parseInt(values[1]);
+                                    bottom = parseInt(values[2]);
+                                    left = parseInt(values[3])
+                                } else {
+                                    throw Error("padding error: " + padding)
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    throw TypeError("error padding: " + padding)
+                }
+            }
+        }
+        this.__ie.style.paddingLeft = null;
+        this.__ie.style.paddingRight = null;
+        this.__ie.style.paddingTop = null;
+        this.__ie.style.paddingBottom = null;
+        this.__ie.style.padding = padding;
+        var size = this.getSize();
+        var x = left;
+        var y = top;
+        var width = size.width - left - right;
+        var height = size.height - top - bottom;
+        this.__bounds = new Rect(x, y, width, height);
+        this.needsLayoutSubviews = true
+    };
+    View.prototype.getPaddingLeft = function() {
+        var padding = this.__ie.style.paddingLeft;
+        if (padding) {
+            return parseInt(padding)
+        }
+        padding = this.__ie.style.padding;
+        if (padding) {
+            var values = padding.split(" ");
+            if (values.length === 1) {
+                return parseInt(values[0])
+            } else {
+                if (values.length === 2) {
+                    return parseInt(values[1])
+                } else {
+                    if (values.length === 3) {
+                        return parseInt(values[1])
+                    } else {
+                        if (values.length === 4) {
+                            return parseInt(values[3])
+                        } else {
+                            throw Error("padding error: " + padding)
+                        }
+                    }
+                }
+            }
+        }
+        return 0
+    };
+    View.prototype.setPaddingLeft = function(left) {
+        var top = this.getPaddingTop();
+        var right = this.getPaddingRight();
+        var bottom = this.getPaddingBottom();
+        this.setPadding(new Edges(left, top, right, bottom))
+    };
+    View.prototype.getPaddingRight = function() {
+        var padding = this.__ie.style.paddingRight;
+        if (padding) {
+            return parseInt(padding)
+        }
+        padding = this.__ie.style.padding;
+        if (padding) {
+            var values = padding.split(" ");
+            if (values.length === 1) {
+                return parseInt(values[0])
+            } else {
+                if (values.length === 2) {
+                    return parseInt(values[1])
+                } else {
+                    if (values.length === 3) {
+                        return parseInt(values[1])
+                    } else {
+                        if (values.length === 4) {
+                            return parseInt(values[1])
+                        } else {
+                            throw Error("padding error: " + padding)
+                        }
+                    }
+                }
+            }
+        }
+        return 0
+    };
+    View.prototype.setPaddingRight = function(right) {
+        var top = this.getPaddingTop();
+        var bottom = this.getPaddingBottom();
+        var left = this.getPaddingLeft();
+        this.setPadding(new Edges(left, top, right, bottom))
+    };
+    View.prototype.getPaddingTop = function() {
+        var padding = this.__ie.style.paddingTop;
+        if (padding) {
+            return parseInt(padding)
+        }
+        padding = this.__ie.style.padding;
+        if (padding) {
+            var values = padding.split(" ");
+            if (values.length === 1) {
+                return parseInt(values[0])
+            } else {
+                if (values.length === 2) {
+                    return parseInt(values[0])
+                } else {
+                    if (values.length === 3) {
+                        return parseInt(values[0])
+                    } else {
+                        if (values.length === 4) {
+                            return parseInt(values[0])
+                        } else {
+                            throw Error("padding error: " + padding)
+                        }
+                    }
+                }
+            }
+        }
+        return 0
+    };
+    View.prototype.setPaddingTop = function(top) {
+        var right = this.getPaddingRight();
+        var bottom = this.getPaddingBottom();
+        var left = this.getPaddingLeft();
+        this.setPadding(new Edges(left, top, right, bottom))
+    };
+    View.prototype.getPaddingBottom = function() {
+        var padding = this.__ie.style.paddingBottom;
+        if (padding) {
+            return parseInt(padding)
+        }
+        padding = this.__ie.style.padding;
+        if (padding) {
+            var values = padding.split(" ");
+            if (values.length === 1) {
+                return parseInt(values[0])
+            } else {
+                if (values.length === 2) {
+                    return parseInt(values[0])
+                } else {
+                    if (values.length === 3) {
+                        return parseInt(values[2])
+                    } else {
+                        if (values.length === 4) {
+                            return parseInt(values[2])
+                        } else {
+                            throw Error("padding error: " + padding)
+                        }
+                    }
+                }
+            }
+        }
+        return 0
+    };
+    View.prototype.setPaddingBottom = function(bottom) {
+        var top = this.getPaddingTop();
+        var right = this.getPaddingRight();
+        var left = this.getPaddingLeft();
+        this.setPadding(new Edges(left, top, right, bottom))
+    }
+}(tarsier.ui);
+! function(ns) {
     var View = ns.View;
     var ScrollView = function(div) {
         View.call(this, div);
@@ -651,7 +800,7 @@ if (typeof tarsier.ui !== "object") {
         this.__ie.style.overflowY = overflow
     };
     View.prototype.scrollToBottom = function() {
-        this.__ie.scrollTop = this.__ie.scrollHeight;
+        this.__ie.scrollTop = this.__ie.scrollHeight
     };
     ns.ScrollView = ScrollView
 }(tarsier.ui);
