@@ -254,7 +254,7 @@ if (typeof tarsier.ui !== "object") {
         };
         var div;
         for (var i = 0; i < dragAreas.length; ++i) {
-            div = dragAreas[i];
+            div = $(dragAreas[i]).__ie;
             div.draggable = true;
             div.ondragstart = drag_start;
             div.ondrag = div.ondragover = drag_move;
@@ -272,7 +272,7 @@ if (typeof tarsier.ui !== "object") {
         delete controller.__dp;
         var div;
         for (var i = 0; i < dragAreas.length; ++i) {
-            div = dragAreas[i];
+            div = $(dragAreas[i]).__ie;
             div.ondragstart = null;
             div.ondrag = div.ondragover = null;
             div.ondragend = null;
