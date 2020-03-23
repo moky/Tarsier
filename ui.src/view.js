@@ -105,10 +105,10 @@
         child = $(child);
         this.__ie.appendChild(child.__ie);
     };
-    View.prototype.insertBefore = function (node, child) {
-        node = $(node);
-        child = $(child);
-        this.__ie.insertBefore(node.__ie, child.__ie);
+    View.prototype.insertBefore = function (newChild, existingChild) {
+        newChild = $(newChild);
+        existingChild = $(existingChild);
+        this.__ie.insertBefore(newChild.__ie, existingChild.__ie);
     };
     View.prototype.removeChild = function (child) {
         child = $(child);

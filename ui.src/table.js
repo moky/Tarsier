@@ -195,7 +195,6 @@
 
     var TableViewCell = function (cell) {
         View.call(this, cell);
-        this.setClassName('ts_cell');
     };
     TableViewCell.prototype = Object.create(View.prototype);
     TableViewCell.prototype.constructor = TableViewCell;
@@ -216,7 +215,6 @@
 
     var TableView = function (table) {
         ScrollView.call(this, table);
-        this.setClassName('ts_table');
 
         this.setScrollX(false);
         this.setScrollY(true);
@@ -242,10 +240,6 @@
         // 1. show section header
         var header = section_header.call(this, section);
         if (header) {
-            clazz = header.getClassName();
-            if (!clazz || clazz.indexOf('ts_header') < 0) {
-                header.setClassName('ts_header');
-            }
             this.appendChild(header);
         }
         // 2. show cells
@@ -254,19 +248,11 @@
         for (var row = 0; row < count; ++row) {
             indexPath = new IndexPath(section, row);
             cell = this.dataSource.cellForRowAtIndexPath(indexPath, this);
-            clazz = cell.getClassName();
-            if (!clazz || clazz.indexOf('ts_cell') < 0) {
-                cell.setClassName('ts_cell');
-            }
             this.appendChild(cell);
         }
         // 3. show section footer
         var footer = section_footer.call(this, section);
         if (footer) {
-            clazz = footer.getClassName();
-            if (!clazz || clazz.indexOf('ts_footer') < 0) {
-                footer.setClassName('ts_footer');
-            }
             this.appendChild(footer);
         }
     };
@@ -278,7 +264,7 @@
         var title = this.delegate.titleForHeaderInSection(section, this);
         if (title) {
             header = new ns.View();
-            header.setClassName('ts_header');
+            header.setClassName('ts_table_header');
             header.setText(title);
         }
         return header;
@@ -291,7 +277,7 @@
         var title = this.delegate.titleForFooterInSection(section, this);
         if (title) {
             footer = new ns.View();
-            footer.setClassName('ts_footer');
+            footer.setClassName('ts_table_footer');
             footer.setText(title);
         }
         return footer;

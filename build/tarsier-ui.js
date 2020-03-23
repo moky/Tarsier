@@ -354,10 +354,10 @@ if (typeof tarsier.ui !== "object") {
         child = $(child);
         this.__ie.appendChild(child.__ie)
     };
-    View.prototype.insertBefore = function(node, child) {
-        node = $(node);
-        child = $(child);
-        this.__ie.insertBefore(node.__ie, child.__ie)
+    View.prototype.insertBefore = function(newChild, existingChild) {
+        newChild = $(newChild);
+        existingChild = $(existingChild);
+        this.__ie.insertBefore(newChild.__ie, existingChild.__ie)
     };
     View.prototype.removeChild = function(child) {
         child = $(child);
@@ -840,8 +840,7 @@ if (typeof tarsier.ui !== "object") {
 ! function(ns) {
     var View = ns.View;
     var TableViewCell = function(cell) {
-        View.call(this, cell);
-        this.setClassName("ts_cell")
+        View.call(this, cell)
     };
     TableViewCell.prototype = Object.create(View.prototype);
     TableViewCell.prototype.constructor = TableViewCell;
@@ -854,7 +853,6 @@ if (typeof tarsier.ui !== "object") {
     var IndexPath = ns.IndexPath;
     var TableView = function(table) {
         ScrollView.call(this, table);
-        this.setClassName("ts_table");
         this.setScrollX(false);
         this.setScrollY(true);
         this.dataSource = null;
@@ -873,10 +871,6 @@ if (typeof tarsier.ui !== "object") {
         var clazz;
         var header = section_header.call(this, section);
         if (header) {
-            clazz = header.getClassName();
-            if (!clazz || clazz.indexOf("ts_header") < 0) {
-                header.setClassName("ts_header")
-            }
             this.appendChild(header)
         }
         var indexPath, cell;
@@ -884,18 +878,10 @@ if (typeof tarsier.ui !== "object") {
         for (var row = 0; row < count; ++row) {
             indexPath = new IndexPath(section, row);
             cell = this.dataSource.cellForRowAtIndexPath(indexPath, this);
-            clazz = cell.getClassName();
-            if (!clazz || clazz.indexOf("ts_cell") < 0) {
-                cell.setClassName("ts_cell")
-            }
             this.appendChild(cell)
         }
         var footer = section_footer.call(this, section);
         if (footer) {
-            clazz = footer.getClassName();
-            if (!clazz || clazz.indexOf("ts_footer") < 0) {
-                footer.setClassName("ts_footer")
-            }
             this.appendChild(footer)
         }
     };
@@ -907,7 +893,7 @@ if (typeof tarsier.ui !== "object") {
         var title = this.delegate.titleForHeaderInSection(section, this);
         if (title) {
             header = new ns.View();
-            header.setClassName("ts_header");
+            header.setClassName("ts_table_header");
             header.setText(title)
         }
         return header
@@ -920,7 +906,7 @@ if (typeof tarsier.ui !== "object") {
         var title = this.delegate.titleForFooterInSection(section, this);
         if (title) {
             footer = new ns.View();
-            footer.setClassName("ts_footer");
+            footer.setClassName("ts_table_footer");
             footer.setText(title)
         }
         return footer
@@ -1061,6 +1047,57 @@ if (typeof tarsier.ui !== "object") {
         this.__ie.href = url
     };
     ns.Link = Link
+}(tarsier.ui);
+! function(ns) {
+    var View = ns.View;
+    var Legend = function(legend) {
+        if (!legend) {
+            legend = document.createElement("LEGEND")
+        }
+        View.call(this, legend)
+    };
+    Legend.prototype = Object.create(View.prototype);
+    Legend.prototype.constructor = Legend;
+    var get_legend = function() {
+        var children = this.getChildren();
+        var node;
+        for (var i = 0; i < children.length; ++i) {
+            node = children[i];
+            if (node instanceof Legend) {
+                return node
+            }
+        }
+        return null
+    };
+    var FieldSet = function(fieldset) {
+        if (!fieldset) {
+            fieldset = document.createElement("FIELDSET")
+        }
+        View.call(this, fieldset)
+    };
+    FieldSet.prototype = Object.create(View.prototype);
+    FieldSet.prototype.constructor = FieldSet;
+    FieldSet.prototype.getCaption = function() {
+        var legend = get_legend.call(this);
+        if (legend) {
+            return legend.getText()
+        }
+        return null
+    };
+    FieldSet.prototype.setCaption = function(text) {
+        var legend = get_legend.call(this);
+        if (!legend) {
+            legend = new Legend();
+            var first = this.firstChild();
+            if (first) {
+                this.insertBefore(legend, first)
+            } else {
+                this.appendChild(legend)
+            }
+        }
+        legend.setText(text)
+    };
+    ns.FieldSet = FieldSet
 }(tarsier.ui);
 ! function(ns) {
     var Rect = ns.Rect;
