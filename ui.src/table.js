@@ -209,7 +209,9 @@
 
     var $ = ns.$;
     var View = ns.View;
+
     var ScrollView = ns.ScrollView;
+    var TableViewCell = ns.TableViewCell;
 
     var IndexPath = ns.IndexPath;
 
@@ -237,18 +239,39 @@
     };
 
     var show_section = function (section) {
-        var clazz;
         // 1. show section header
         var header = section_header.call(this, section);
         if (header) {
             this.appendChild(header);
         }
+        var dataSource = this.dataSource;
+        var delegate = this.delegate;
         // 2. show cells
         var indexPath, cell;
-        var count = this.dataSource.numberOfRowsInSection(section, this);
+        var count = dataSource.numberOfRowsInSection(section, this);
         for (var row = 0; row < count; ++row) {
             indexPath = new IndexPath(section, row);
-            cell = this.dataSource.cellForRowAtIndexPath(indexPath, this);
+            cell = dataSource.cellForRowAtIndexPath(indexPath, this);
+            if (!cell.__ie.onclick) {
+                cell.indexPath = indexPath;
+                cell.__ie.onclick = function (ev) {
+                    // get target table cell
+                    var target = $(ev.target);
+                    while (target) {
+                        if (target instanceof TableViewCell) {
+                            break;
+                        }
+                        target = target.getParent();
+                    }
+                    if (!target) {
+                        throw Error('failed to get event target: ' + ev.target);
+                    }
+                    ev.cancelBubble = true;
+                    ev.stopPropagation();
+                    ev.preventDefault();
+                    delegate.didSelectRowAtIndexPath(target.indexPath, this);
+                };
+            }
             this.appendChild(cell);
         }
         // 3. show section footer
@@ -264,7 +287,7 @@
         }
         var title = this.delegate.titleForHeaderInSection(section, this);
         if (title) {
-            header = new ns.View();
+            header = new View();
             header.setClassName('TSTableSectionHeader');
             header.setText(title);
         }
@@ -277,7 +300,7 @@
         }
         var title = this.delegate.titleForFooterInSection(section, this);
         if (title) {
-            footer = new ns.View();
+            footer = new View();
             footer.setClassName('TSTableSectionFooter');
             footer.setText(title);
         }
