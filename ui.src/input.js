@@ -57,8 +57,11 @@
         if (typeof dataList === 'string') {
             return $(document.getElementById(dataList));
         }
-        if (dataList instanceof HTMLDataListElement) {
-            return $(dataList);
+        if (typeof HTMLDataListElement === 'object') {
+            // FIXME: DataList not support by Safari
+            if (dataList instanceof HTMLDataListElement) {
+                return $(dataList);
+            }
         }
         return null;
     };

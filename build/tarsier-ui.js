@@ -25,8 +25,10 @@ if (typeof tarsier.ui !== "object") {
         if (node instanceof HTMLButtonElement) {
             return new ns.Button(node)
         }
-        if (node instanceof HTMLDataListElement) {
-            return new ns.DataList(node)
+        if (typeof HTMLDataListElement === "object") {
+            if (node instanceof HTMLDataListElement) {
+                return new ns.DataList(node)
+            }
         }
         if (node instanceof HTMLDivElement) {
             return new ns.Div(node)
@@ -1042,8 +1044,10 @@ if (typeof tarsier.ui !== "object") {
         if (typeof dataList === "string") {
             return $(document.getElementById(dataList))
         }
-        if (dataList instanceof HTMLDataListElement) {
-            return $(dataList)
+        if (typeof HTMLDataListElement === "object") {
+            if (dataList instanceof HTMLDataListElement) {
+                return $(dataList)
+            }
         }
         return null
     };

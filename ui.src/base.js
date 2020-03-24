@@ -50,8 +50,11 @@ if (typeof tarsier.ui !== "object") {
         if (node instanceof HTMLButtonElement) {
             return new ns.Button(node);
         }
-        if (node instanceof HTMLDataListElement) {
-            return new ns.DataList(node);
+        if (typeof HTMLDataListElement === 'object') {
+            // FIXME: DataList not support by Safari
+            if (node instanceof HTMLDataListElement) {
+                return new ns.DataList(node);
+            }
         }
         if (node instanceof HTMLDivElement) {
             return new ns.Div(node);
