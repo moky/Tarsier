@@ -42,6 +42,7 @@
 
     Link.prototype.setURL = function (url) {
         this.__ie.href = url;
+        return this;
     };
 
     //-------- namespace --------

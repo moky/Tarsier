@@ -79,6 +79,7 @@
             }
         }
         legend.setText(text);
+        return this;
     };
 
     //-------- namespace --------

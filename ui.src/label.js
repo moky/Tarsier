@@ -44,23 +44,32 @@
     //
     //  patch View for text
     //
+
+    View.prototype.getText = function () {
+        return this.__ie.innerText;
+    };
     View.prototype.setText = function (text) {
         this.__ie.innerText = text;
+        return this;
     };
+
     View.prototype.setColor = function (color) {
         if (color instanceof Color) {
             color = color.toString();
         }
         this.__ie.style.color = color;
+        return this;
     };
     View.prototype.setFontSize = function (size) {
         if (typeof size === 'number') {
             size = size + 'pt';
         }
         this.__ie.style.fontSize = size;
+        return this;
     };
 
     //-------- namespace --------
     ns.Label = Label;
+    ns.Span = Label;
 
 }(tarsier.ui);

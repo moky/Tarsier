@@ -47,23 +47,32 @@ if (typeof tarsier.ui !== "object") {
             return node;
         }
         // create with element type
-        if (node instanceof HTMLDivElement) {
-            return new ns.View(node);
+        if (node instanceof HTMLButtonElement) {
+            return new ns.Button(node);
         }
-        if (node instanceof HTMLSpanElement) {
-            return new ns.Label(node);
+        if (node instanceof HTMLDataListElement) {
+            return new ns.DataList(node);
+        }
+        if (node instanceof HTMLDivElement) {
+            return new ns.Div(node);
+        }
+        if (node instanceof HTMLFieldSetElement) {
+            return new ns.FieldSet(node);
         }
         if (node instanceof HTMLImageElement) {
             return new ns.Image(node);
         }
-        if (node instanceof HTMLButtonElement) {
-            return new ns.Button(node);
+        if (node instanceof HTMLInputElement) {
+            return new ns.Input(node);
         }
         if (node instanceof HTMLLinkElement) {
             return new ns.Link(node);
         }
-        if (node instanceof HTMLInputElement) {
-            return new ns.Input(node);
+        if (node instanceof HTMLOptionElement) {
+            return new ns.Option(node);
+        }
+        if (node instanceof HTMLSpanElement) {
+            return new ns.Span(node);
         }
         if (node instanceof HTMLTextAreaElement) {
             return new ns.TextArea(node);

@@ -41,6 +41,7 @@
 
     Image.prototype.setSrc = function (src) {
         this.__ie.src = src;
+        return this;
     };
 
     //-------- namespace --------

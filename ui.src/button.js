@@ -59,6 +59,7 @@
             this.__image = new Image(image);
         }
         this.appendChild(this.__image);
+        return this;
     };
 
     Button.prototype.onClick = function (ev) {

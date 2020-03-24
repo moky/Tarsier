@@ -22,23 +22,32 @@ if (typeof tarsier.ui !== "object") {
         if (node instanceof ns.View) {
             return node
         }
-        if (node instanceof HTMLDivElement) {
-            return new ns.View(node)
+        if (node instanceof HTMLButtonElement) {
+            return new ns.Button(node)
         }
-        if (node instanceof HTMLSpanElement) {
-            return new ns.Label(node)
+        if (node instanceof HTMLDataListElement) {
+            return new ns.DataList(node)
+        }
+        if (node instanceof HTMLDivElement) {
+            return new ns.Div(node)
+        }
+        if (node instanceof HTMLFieldSetElement) {
+            return new ns.FieldSet(node)
         }
         if (node instanceof HTMLImageElement) {
             return new ns.Image(node)
         }
-        if (node instanceof HTMLButtonElement) {
-            return new ns.Button(node)
+        if (node instanceof HTMLInputElement) {
+            return new ns.Input(node)
         }
         if (node instanceof HTMLLinkElement) {
             return new ns.Link(node)
         }
-        if (node instanceof HTMLInputElement) {
-            return new ns.Input(node)
+        if (node instanceof HTMLOptionElement) {
+            return new ns.Option(node)
+        }
+        if (node instanceof HTMLSpanElement) {
+            return new ns.Span(node)
         }
         if (node instanceof HTMLTextAreaElement) {
             return new ns.TextArea(node)
@@ -307,8 +316,12 @@ if (typeof tarsier.ui !== "object") {
     };
     View.prototype = Object.create(Object.prototype);
     View.prototype.constructor = View;
+    View.prototype.getId = function() {
+        return this.__ie.id
+    };
     View.prototype.setId = function(id) {
-        this.__ie.id = id
+        this.__ie.id = id;
+        return this
     };
     View.prototype.getClassName = function() {
         return this.__ie.className
@@ -320,6 +333,7 @@ if (typeof tarsier.ui !== "object") {
         } else {
             this.__ie.className = clazz
         }
+        return this
     };
     View.prototype.getParent = function() {
         return $(this.__ie.parentNode)
@@ -331,6 +345,7 @@ if (typeof tarsier.ui !== "object") {
         } else {
             throw Error("parent node empty")
         }
+        return this
     };
     View.prototype.getChildren = function() {
         var children = [];
@@ -352,23 +367,35 @@ if (typeof tarsier.ui !== "object") {
     };
     View.prototype.appendChild = function(child) {
         child = $(child);
-        this.__ie.appendChild(child.__ie)
+        this.__ie.appendChild(child.__ie);
+        return this
     };
     View.prototype.insertBefore = function(newChild, existingChild) {
         newChild = $(newChild);
         existingChild = $(existingChild);
-        this.__ie.insertBefore(newChild.__ie, existingChild.__ie)
+        this.__ie.insertBefore(newChild.__ie, existingChild.__ie);
+        return this
     };
     View.prototype.removeChild = function(child) {
         child = $(child);
         this.__ie.removeChild(child.__ie);
-        delete child.__ie
+        delete child.__ie;
+        return this
+    };
+    View.prototype.removeChildren = function() {
+        var children = this.getChildren();
+        var index = children.length;
+        while (--index >= 0) {
+            this.removeChild(children[index])
+        }
+        return this
     };
     View.prototype.replaceChild = function(newChild, oldChild) {
         newChild = $(newChild);
         oldChild = $(oldChild);
         this.__ie.replaceChild(newChild.__ie, oldChild.__ie);
-        delete oldChild.__ie
+        delete oldChild.__ie;
+        return this
     };
     View.prototype.contains = function(child) {
         child = $(child);
@@ -382,13 +409,14 @@ if (typeof tarsier.ui !== "object") {
         for (var i = 0; i < children.length; ++i) {
             children[i].layoutSubviews()
         }
-        this.needsLayoutSubviews = false
+        this.needsLayoutSubviews = false;
+        return this
     };
     View.prototype.floatToTop = function() {
         var parent = this.getParent();
         if (!parent) {
             console.error("parent node empty");
-            return
+            return null
         }
         var brothers = parent.getChildren();
         var pos = brothers.indexOf(this);
@@ -408,15 +436,18 @@ if (typeof tarsier.ui !== "object") {
                 zIndex = z + 1
             }
         }
-        this.setZ(zIndex)
+        this.setZ(zIndex);
+        return this
     };
     View.prototype.setBackgroundColor = function(color) {
         if (color instanceof Color) {
             color = color.toString()
         }
-        this.__ie.style.backgroundColor = color
+        this.__ie.style.backgroundColor = color;
+        return this
     };
-    ns.View = View
+    ns.View = View;
+    ns.Div = View
 }(tarsier.ui);
 ! function(ns) {
     var Point = ns.Point;
@@ -445,15 +476,18 @@ if (typeof tarsier.ui !== "object") {
     View.prototype.setX = function(left) {
         this.__ie.style.position = "absolute";
         this.__ie.style.left = left + "px";
-        this.__ie.offsetLeft = this.__frame.origin.x = left
+        this.__ie.offsetLeft = this.__frame.origin.x = left;
+        return this
     };
     View.prototype.setY = function(top) {
         this.__ie.style.position = "absolute";
         this.__ie.style.top = top + "px";
-        this.__ie.offsetTop = this.__frame.origin.y = top
+        this.__ie.offsetTop = this.__frame.origin.y = top;
+        return this
     };
     View.prototype.setZ = function(zIndex) {
-        this.__ie.style.zIndex = zIndex
+        this.__ie.style.zIndex = zIndex;
+        return this
     };
     View.prototype.getWidth = function() {
         return parse_int(this.__ie.style.width, this.__ie.offsetWidth)
@@ -465,13 +499,15 @@ if (typeof tarsier.ui !== "object") {
         this.__ie.style.width = width + "px";
         this.__ie.offsetWidth = this.__frame.size.width = width;
         this.__bounds.size.width = width - this.__bounds.origin.x - this.getPaddingRight();
-        this.needsLayoutSubviews = true
+        this.needsLayoutSubviews = true;
+        return this
     };
     View.prototype.setHeight = function(height) {
         this.__ie.style.height = height + "px";
         this.__ie.offsetHeight = this.__frame.size.height = height;
         this.__bounds.size.height = height - this.__bounds.origin.y - this.getPaddingBottom();
-        this.needsLayoutSubviews = true
+        this.needsLayoutSubviews = true;
+        return this
     };
     View.prototype.getFrame = function() {
         if (this.__frame.equals(Rect.Zero)) {
@@ -483,10 +519,11 @@ if (typeof tarsier.ui !== "object") {
     };
     View.prototype.setFrame = function(frame) {
         if (this.__frame.equals(frame)) {
-            return
+            return this
         }
         this.setOrigin(frame.origin);
-        this.setSize(frame.size)
+        this.setSize(frame.size);
+        return this
     };
     View.prototype.getOrigin = function() {
         if (this.__frame.origin.equals(Point.Zero)) {
@@ -501,10 +538,11 @@ if (typeof tarsier.ui !== "object") {
             point = new Point(arguments[0], arguments[1])
         }
         if (this.__frame.origin.equals(point)) {
-            return
+            return this
         }
         this.setX(point.x);
-        this.setY(point.y)
+        this.setY(point.y);
+        return this
     };
     View.prototype.getSize = function() {
         if (this.__frame.size.equals(Size.Zero)) {
@@ -519,10 +557,11 @@ if (typeof tarsier.ui !== "object") {
             size = new Size(arguments[0], arguments[1])
         }
         if (this.__frame.size.equals(size)) {
-            return
+            return this
         }
         this.setWidth(size.width);
-        this.setHeight(size.height)
+        this.setHeight(size.height);
+        return this
     };
     View.prototype.getBounds = function() {
         if (this.__bounds.equals(Rect.Zero)) {
@@ -537,14 +576,15 @@ if (typeof tarsier.ui !== "object") {
     };
     View.prototype.setBounds = function(bounds) {
         if (this.__bounds.equals(bounds)) {
-            return
+            return this
         }
         var frame = this.__frame;
         var left = bounds.origin.x;
         var top = bounds.origin.y;
         var right = frame.size.width - left - bounds.size.width;
         var bottom = frame.size.height - top - bounds.size.height;
-        this.setPadding(new Edges(left, top, right, bottom))
+        this.setPadding(new Edges(left, top, right, bottom));
+        return this
     }
 }(tarsier.ui);
 ! function(ns) {
@@ -612,7 +652,8 @@ if (typeof tarsier.ui !== "object") {
         var width = size.width - left - right;
         var height = size.height - top - bottom;
         this.__bounds = new Rect(x, y, width, height);
-        this.needsLayoutSubviews = true
+        this.needsLayoutSubviews = true;
+        return this
     };
     View.prototype.getPaddingLeft = function() {
         var padding = this.__ie.style.paddingLeft;
@@ -646,7 +687,8 @@ if (typeof tarsier.ui !== "object") {
         var top = this.getPaddingTop();
         var right = this.getPaddingRight();
         var bottom = this.getPaddingBottom();
-        this.setPadding(new Edges(left, top, right, bottom))
+        this.setPadding(new Edges(left, top, right, bottom));
+        return this
     };
     View.prototype.getPaddingRight = function() {
         var padding = this.__ie.style.paddingRight;
@@ -680,7 +722,8 @@ if (typeof tarsier.ui !== "object") {
         var top = this.getPaddingTop();
         var bottom = this.getPaddingBottom();
         var left = this.getPaddingLeft();
-        this.setPadding(new Edges(left, top, right, bottom))
+        this.setPadding(new Edges(left, top, right, bottom));
+        return this
     };
     View.prototype.getPaddingTop = function() {
         var padding = this.__ie.style.paddingTop;
@@ -714,7 +757,8 @@ if (typeof tarsier.ui !== "object") {
         var right = this.getPaddingRight();
         var bottom = this.getPaddingBottom();
         var left = this.getPaddingLeft();
-        this.setPadding(new Edges(left, top, right, bottom))
+        this.setPadding(new Edges(left, top, right, bottom));
+        return this
     };
     View.prototype.getPaddingBottom = function() {
         var padding = this.__ie.style.paddingBottom;
@@ -748,7 +792,8 @@ if (typeof tarsier.ui !== "object") {
         var top = this.getPaddingTop();
         var right = this.getPaddingRight();
         var left = this.getPaddingLeft();
-        this.setPadding(new Edges(left, top, right, bottom))
+        this.setPadding(new Edges(left, top, right, bottom));
+        return this
     }
 }(tarsier.ui);
 ! function(ns) {
@@ -761,7 +806,8 @@ if (typeof tarsier.ui !== "object") {
     ScrollView.prototype.constructor = ScrollView;
     View.prototype.setScroll = function(overflow) {
         this.setScrollX(overflow);
-        this.setScrollY(overflow)
+        this.setScrollY(overflow);
+        return this
     };
     View.prototype.setScrollX = function(overflow) {
         if (overflow) {
@@ -771,7 +817,8 @@ if (typeof tarsier.ui !== "object") {
         } else {
             overflow = "none"
         }
-        this.__ie.style.overflowX = overflow
+        this.__ie.style.overflowX = overflow;
+        return this
     };
     View.prototype.setScrollY = function(overflow) {
         if (overflow) {
@@ -781,10 +828,12 @@ if (typeof tarsier.ui !== "object") {
         } else {
             overflow = "none"
         }
-        this.__ie.style.overflowY = overflow
+        this.__ie.style.overflowY = overflow;
+        return this
     };
     View.prototype.scrollToBottom = function() {
-        this.__ie.scrollTop = this.__ie.scrollHeight
+        this.__ie.scrollTop = this.__ie.scrollHeight;
+        return this
     };
     ns.ScrollView = ScrollView
 }(tarsier.ui);
@@ -866,6 +915,7 @@ if (typeof tarsier.ui !== "object") {
         for (var section = 0; section < count; ++section) {
             show_section.call(this, section)
         }
+        return this
     };
     var show_section = function(section) {
         var clazz;
@@ -893,7 +943,7 @@ if (typeof tarsier.ui !== "object") {
         var title = this.delegate.titleForHeaderInSection(section, this);
         if (title) {
             header = new ns.View();
-            header.setClassName("ts_table_header");
+            header.setClassName("TSTableSectionHeader");
             header.setText(title)
         }
         return header
@@ -906,16 +956,10 @@ if (typeof tarsier.ui !== "object") {
         var title = this.delegate.titleForFooterInSection(section, this);
         if (title) {
             footer = new ns.View();
-            footer.setClassName("ts_table_footer");
+            footer.setClassName("TSTableSectionFooter");
             footer.setText(title)
         }
         return footer
-    };
-    View.prototype.removeChildren = function() {
-        var children = this.getChildren();
-        for (var i = 0; i < children.length; ++i) {
-            this.removeChild(children[i])
-        }
     };
     ns.TableView = TableView
 }(tarsier.ui);
@@ -930,24 +974,32 @@ if (typeof tarsier.ui !== "object") {
     };
     Label.prototype = Object.create(View.prototype);
     Label.prototype.constructor = Label;
+    View.prototype.getText = function() {
+        return this.__ie.innerText
+    };
     View.prototype.setText = function(text) {
-        this.__ie.innerText = text
+        this.__ie.innerText = text;
+        return this
     };
     View.prototype.setColor = function(color) {
         if (color instanceof Color) {
             color = color.toString()
         }
-        this.__ie.style.color = color
+        this.__ie.style.color = color;
+        return this
     };
     View.prototype.setFontSize = function(size) {
         if (typeof size === "number") {
             size = size + "pt"
         }
-        this.__ie.style.fontSize = size
+        this.__ie.style.fontSize = size;
+        return this
     };
-    ns.Label = Label
+    ns.Label = Label;
+    ns.Span = Label
 }(tarsier.ui);
 ! function(ns) {
+    var $ = ns.$;
     var View = ns.View;
     var Input = function(input) {
         if (!input) {
@@ -961,9 +1013,68 @@ if (typeof tarsier.ui !== "object") {
         return this.__ie.value
     };
     Input.prototype.setValue = function(text) {
-        this.__ie.value = text
+        this.__ie.value = text;
+        return this
+    };
+    Input.prototype.getDatalist = function() {
+        var dataList = this.__ie.list;
+        if (typeof dataList === "string") {
+            return $(document.getElementById(dataList))
+        }
+        if (dataList instanceof HTMLDataListElement) {
+            return $(dataList)
+        }
+        return null
+    };
+    Input.prototype.setDataList = function(options) {
+        var dataList = this.getDatalist();
+        if (!dataList) {
+            var id = "" + Math.random();
+            id = "ts_datalist_" + id.substring(2);
+            dataList = new ns.DataList();
+            dataList.setId(id);
+            this.appendChild(dataList);
+            this.__ie.setAttribute("list", id)
+        }
+        dataList.setOptions(options);
+        return this
     };
     ns.Input = Input
+}(tarsier.ui);
+! function(ns) {
+    var View = ns.View;
+    var Option = function(option) {
+        if (!option) {
+            option = document.createElement("OPTION")
+        }
+        View.call(this, option)
+    };
+    Option.prototype = Object.create(View.prototype);
+    Option.prototype.constructor = Option;
+    var DataList = function(dataList) {
+        if (!dataList) {
+            dataList = document.createElement("DATALIST")
+        }
+        View.call(this, dataList)
+    };
+    DataList.prototype = Object.create(View.prototype);
+    DataList.prototype.constructor = DataList;
+    DataList.prototype.setOptions = function(options) {
+        this.removeChildren();
+        var opt, value;
+        for (var i = 0; i < options.length; ++i) {
+            opt = options[i];
+            if (typeof opt === "string") {
+                value = opt;
+                opt = new Option();
+                opt.setText(value);
+                this.appendChild(opt)
+            }
+        }
+        return this
+    };
+    ns.DataList = DataList;
+    ns.Option = Option
 }(tarsier.ui);
 ! function(ns) {
     var View = ns.View;
@@ -979,7 +1090,8 @@ if (typeof tarsier.ui !== "object") {
         return this.__ie.value
     };
     TextArea.prototype.setValue = function(text) {
-        this.__ie.value = text
+        this.__ie.value = text;
+        return this
     };
     ns.TextArea = TextArea
 }(tarsier.ui);
@@ -994,7 +1106,8 @@ if (typeof tarsier.ui !== "object") {
     Image.prototype = Object.create(View.prototype);
     Image.prototype.constructor = Image;
     Image.prototype.setSrc = function(src) {
-        this.__ie.src = src
+        this.__ie.src = src;
+        return this
     };
     ns.Image = Image
 }(tarsier.ui);
@@ -1027,7 +1140,8 @@ if (typeof tarsier.ui !== "object") {
         } else {
             this.__image = new Image(image)
         }
-        this.appendChild(this.__image)
+        this.appendChild(this.__image);
+        return this
     };
     Button.prototype.onClick = function(ev) {};
     ns.Button = Button
@@ -1044,7 +1158,8 @@ if (typeof tarsier.ui !== "object") {
     Link.prototype = Object.create(View.prototype);
     Link.prototype.constructor = Link;
     Link.prototype.setURL = function(url) {
-        this.__ie.href = url
+        this.__ie.href = url;
+        return this
     };
     ns.Link = Link
 }(tarsier.ui);
@@ -1095,7 +1210,8 @@ if (typeof tarsier.ui !== "object") {
                 this.appendChild(legend)
             }
         }
-        legend.setText(text)
+        legend.setText(text);
+        return this
     };
     ns.FieldSet = FieldSet
 }(tarsier.ui);
@@ -1106,15 +1222,15 @@ if (typeof tarsier.ui !== "object") {
     var Draggable = ns.Draggable;
     var Window = function(frame) {
         View.call(this);
-        this.setClassName("ts_window");
+        this.setClassName("TSWindow");
         var ctrl = this;
         var element = this.__ie;
         var title = new View();
-        title.setClassName("ts_window_title");
+        title.setClassName("TSWindowTitle");
         this.appendChild(title);
         this.titleView = title;
         var close = new Button();
-        close.setClassName("ts_window_close");
+        close.setClassName("TSWindowClose");
         close.onClick = function(ev) {
             if (ctrl.onClose(ev)) {
                 element.remove()
@@ -1141,7 +1257,8 @@ if (typeof tarsier.ui !== "object") {
     Window.prototype = Object.create(View.prototype);
     Window.prototype.constructor = Window;
     Window.prototype.setTitle = function(title) {
-        this.titleView.setText(title)
+        this.titleView.setText(title);
+        return this
     };
     Window.prototype.onClose = function(ev) {
         return true

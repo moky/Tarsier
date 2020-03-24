@@ -51,8 +51,12 @@
     View.prototype = Object.create(Object.prototype);
     View.prototype.constructor = View;
 
+    View.prototype.getId = function () {
+        return this.__ie.id;
+    };
     View.prototype.setId = function (id) {
         this.__ie.id = id;
+        return this;
     };
 
     View.prototype.getClassName = function () {
@@ -65,6 +69,7 @@
         } else {
             this.__ie.className = clazz;
         }
+        return this;
     };
 
     View.prototype.getParent = function () {
@@ -77,6 +82,7 @@
         } else {
             throw Error('parent node empty');
         }
+        return this;
     };
 
     //
@@ -104,12 +110,15 @@
     View.prototype.appendChild = function (child) {
         child = $(child);
         this.__ie.appendChild(child.__ie);
+        return this;
     };
     View.prototype.insertBefore = function (newChild, existingChild) {
         newChild = $(newChild);
         existingChild = $(existingChild);
         this.__ie.insertBefore(newChild.__ie, existingChild.__ie);
+        return this;
     };
+
     View.prototype.removeChild = function (child) {
         child = $(child);
         // 1. remove child node from parent node
@@ -117,7 +126,17 @@
         // 2. remove child node from node controller
         //    (to break circular reference)
         delete child.__ie;
+        return this;
     };
+    View.prototype.removeChildren = function () {
+        var children = this.getChildren();
+        var index = children.length;
+        while (--index >= 0) {
+            this.removeChild(children[index]);
+        }
+        return this;
+    };
+
     View.prototype.replaceChild = function (newChild, oldChild) {
         newChild = $(newChild);
         oldChild = $(oldChild);
@@ -126,6 +145,7 @@
         // 2. remove old node from node controller
         //    (to break circular reference)
         delete oldChild.__ie;
+        return this;
     };
     View.prototype.contains = function (child) {
         child = $(child);
@@ -141,13 +161,14 @@
             children[i].layoutSubviews();
         }
         this.needsLayoutSubviews = false;
+        return this;
     };
 
     View.prototype.floatToTop = function () {
         var parent = this.getParent();
         if (!parent) {
             console.error('parent node empty');
-            return ;
+            return null;
         }
         var brothers = parent.getChildren();
         var pos = brothers.indexOf(this);
@@ -166,6 +187,7 @@
             }
         }
         this.setZ(zIndex);
+        return this;
     };
 
     View.prototype.setBackgroundColor = function (color) {
@@ -173,9 +195,11 @@
             color = color.toString();
         }
         this.__ie.style.backgroundColor = color;
+        return this;
     };
 
     //-------- namespace --------
     ns.View = View;
+    ns.Div = View;
 
 }(tarsier.ui);

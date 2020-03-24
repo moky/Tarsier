@@ -43,6 +43,7 @@
     View.prototype.setScroll = function (overflow) {
         this.setScrollX(overflow);
         this.setScrollY(overflow);
+        return this;
     };
     View.prototype.setScrollX = function (overflow) {
         if (overflow) {
@@ -53,6 +54,7 @@
             overflow = 'none';
         }
         this.__ie.style.overflowX = overflow;
+        return this;
     };
     View.prototype.setScrollY = function (overflow) {
         if (overflow) {
@@ -63,10 +65,12 @@
             overflow = 'none';
         }
         this.__ie.style.overflowY = overflow;
+        return this;
     };
 
     View.prototype.scrollToBottom = function () {
         this.__ie.scrollTop = this.__ie.scrollHeight;
+        return this;
     };
 
     //-------- namespace --------

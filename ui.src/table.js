@@ -233,6 +233,7 @@
         for (var section = 0; section < count; ++section) {
             show_section.call(this, section);
         }
+        return this;
     };
 
     var show_section = function (section) {
@@ -264,7 +265,7 @@
         var title = this.delegate.titleForHeaderInSection(section, this);
         if (title) {
             header = new ns.View();
-            header.setClassName('ts_table_header');
+            header.setClassName('TSTableSectionHeader');
             header.setText(title);
         }
         return header;
@@ -277,20 +278,10 @@
         var title = this.delegate.titleForFooterInSection(section, this);
         if (title) {
             footer = new ns.View();
-            footer.setClassName('ts_table_footer');
+            footer.setClassName('TSTableSectionFooter');
             footer.setText(title);
         }
         return footer;
-    };
-
-    //
-    //  patch View for clear all children
-    //
-    View.prototype.removeChildren = function () {
-        var children = this.getChildren();
-        for (var i = 0; i < children.length; ++i) {
-            this.removeChild(children[i]);
-        }
     };
 
     //-------- namespace --------

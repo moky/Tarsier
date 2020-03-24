@@ -37,21 +37,20 @@
 
     var Window = function (frame) {
         View.call(this);
-
-        this.setClassName('ts_window');
+        this.setClassName('TSWindow');
 
         var ctrl = this;
         var element = this.__ie;
 
         // init title
         var title = new View();
-        title.setClassName('ts_window_title');
+        title.setClassName('TSWindowTitle');
         this.appendChild(title);
         this.titleView = title;
 
         // close button
         var close = new Button();
-        close.setClassName('ts_window_close');
+        close.setClassName('TSWindowClose');
         close.onClick = function (ev) {
             if (ctrl.onClose(ev)) {
                 element.remove();
@@ -79,6 +78,7 @@
 
     Window.prototype.setTitle = function (title) {
         this.titleView.setText(title);
+        return this;
     };
 
     Window.prototype.onClose = function (ev) {

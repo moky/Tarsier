@@ -44,6 +44,7 @@
     };
     TextArea.prototype.setValue = function (text) {
         this.__ie.value = text;
+        return this;
     };
 
     //-------- namespace --------

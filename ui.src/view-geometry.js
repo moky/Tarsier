@@ -62,14 +62,17 @@
         this.__ie.style.position = 'absolute';
         this.__ie.style.left = left + 'px';
         this.__ie.offsetLeft = this.__frame.origin.x = left;
+        return this;
     };
     View.prototype.setY = function (top) {
         this.__ie.style.position = 'absolute';
         this.__ie.style.top = top + 'px';
         this.__ie.offsetTop = this.__frame.origin.y = top;
+        return this;
     };
     View.prototype.setZ = function (zIndex) {
         this.__ie.style.zIndex = zIndex;
+        return this;
     };
 
     //
@@ -89,6 +92,7 @@
         this.__bounds.size.width = width - this.__bounds.origin.x - this.getPaddingRight();
         // layout subviews while bounds changed
         this.needsLayoutSubviews = true;
+        return this;
     };
     View.prototype.setHeight = function (height) {
         this.__ie.style.height = height + 'px';
@@ -97,6 +101,7 @@
         this.__bounds.size.height = height - this.__bounds.origin.y - this.getPaddingBottom();
         // layout subviews while bounds changed
         this.needsLayoutSubviews = true;
+        return this;
     };
 
     //
@@ -113,10 +118,11 @@
     View.prototype.setFrame = function (frame) {
         if (this.__frame.equals(frame)) {
             // frame not change
-            return ;
+            return this;
         }
         this.setOrigin(frame.origin);
         this.setSize(frame.size);
+        return this;
     };
 
     View.prototype.getOrigin = function () {
@@ -133,10 +139,11 @@
         }
         if (this.__frame.origin.equals(point)) {
             // position not change
-            return ;
+            return this;
         }
         this.setX(point.x);
         this.setY(point.y);
+        return this;
     };
 
     View.prototype.getSize = function () {
@@ -153,10 +160,11 @@
         }
         if (this.__frame.size.equals(size)) {
             // size not change
-            return ;
+            return this;
         }
         this.setWidth(size.width);
         this.setHeight(size.height);
+        return this;
     };
 
     //
@@ -176,7 +184,7 @@
     View.prototype.setBounds = function (bounds) {
         if (this.__bounds.equals(bounds)) {
             // bounds not change
-            return ;
+            return this;
         }
 
         // update padding for new bounds
@@ -186,6 +194,7 @@
         var right = frame.size.width - left - bounds.size.width;
         var bottom = frame.size.height - top - bounds.size.height;
         this.setPadding(new Edges(left, top, right, bottom));
+        return this;
     };
 
 }(tarsier.ui);
@@ -262,6 +271,7 @@
         this.__bounds = new Rect(x, y, width, height);
         // layout subviews while bounds changed
         this.needsLayoutSubviews = true;
+        return this;
     };
 
     //
@@ -298,6 +308,7 @@
         var right = this.getPaddingRight();
         var bottom = this.getPaddingBottom();
         this.setPadding(new Edges(left, top, right, bottom));
+        return this;
     };
 
     //
@@ -334,6 +345,7 @@
         var bottom = this.getPaddingBottom();
         var left = this.getPaddingLeft();
         this.setPadding(new Edges(left, top, right, bottom));
+        return this;
     };
 
     //
@@ -370,6 +382,7 @@
         var bottom = this.getPaddingBottom();
         var left = this.getPaddingLeft();
         this.setPadding(new Edges(left, top, right, bottom));
+        return this;
     };
 
     //
@@ -406,6 +419,7 @@
         var right = this.getPaddingRight();
         var left = this.getPaddingLeft();
         this.setPadding(new Edges(left, top, right, bottom));
+        return this;
     };
 
 }(tarsier.ui);
