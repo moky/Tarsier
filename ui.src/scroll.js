@@ -51,7 +51,7 @@
                 overflow = 'auto';
             }
         } else {
-            overflow = 'none';
+            overflow = 'hidden';
         }
         this.__ie.style.overflowX = overflow;
         return this;
@@ -62,7 +62,7 @@
                 overflow = 'auto';
             }
         } else {
-            overflow = 'none';
+            overflow = 'hidden';
         }
         this.__ie.style.overflowY = overflow;
         return this;
