@@ -244,6 +244,7 @@
         if (header) {
             this.appendChild(header);
         }
+        var tableView = this;
         var dataSource = this.dataSource;
         var delegate = this.delegate;
         // 2. show cells
@@ -269,7 +270,7 @@
                     ev.cancelBubble = true;
                     ev.stopPropagation();
                     ev.preventDefault();
-                    delegate.didSelectRowAtIndexPath(target.indexPath, this);
+                    delegate.didSelectRowAtIndexPath(target.indexPath, tableView);
                 };
             }
             this.appendChild(cell);
