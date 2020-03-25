@@ -36,34 +36,26 @@
             btn = document.createElement('BUTTON');
         }
         View.call(this, btn);
+        // bind click event
         var vc = this;
-        var ie = this.__ie;
-        ie.onclick = function (ev) {
+        this.__ie.onclick = function (ev) {
             ev.cancelBubble = true;
             ev.stopPropagation();
             ev.preventDefault();
             vc.onClick(ev);
         };
-        this.__image = null;
     };
     Button.prototype = Object.create(View.prototype);
     Button.prototype.constructor = Button;
 
-    Button.prototype.setImage = function (image) {
-        if (this.__image) {
-            this.removeChild(this.__image);
-        }
-        if (image instanceof Image) {
-            this.__image = image;
-        } else {
-            this.__image = new Image(image);
-        }
-        this.appendChild(this.__image);
-        return this;
+    View.prototype.onClick = function (ev) {
+        // process click event in subclass
     };
 
-    Button.prototype.onClick = function (ev) {
-        // process click event
+    View.prototype.setImage = function (src) {
+        this.__ie.style.backgroundImage = 'url(' + src + ')';
+        this.__ie.style.backgroundSize = '100% 100%';
+        return this;
     };
 
     //-------- namespace --------
