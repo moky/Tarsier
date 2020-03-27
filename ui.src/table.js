@@ -191,12 +191,15 @@
 !function (ns) {
     'use strict';
 
-    var View = ns.View;
+    var Button = ns.Button;
 
     var TableViewCell = function (cell) {
-        View.call(this, cell);
+        if (!cell) {
+            cell = document.createElement('DIV');
+        }
+        Button.call(this, cell);
     };
-    TableViewCell.prototype = Object.create(View.prototype);
+    TableViewCell.prototype = Object.create(Button.prototype);
     TableViewCell.prototype.constructor = TableViewCell;
 
     //-------- namespace --------
@@ -253,9 +256,9 @@
         for (var row = 0; row < count; ++row) {
             indexPath = new IndexPath(section, row);
             cell = dataSource.cellForRowAtIndexPath(indexPath, this);
-            if (!cell.__ie.onclick) {
+            if (typeof cell.onClick !== 'function') {
                 cell.indexPath = indexPath;
-                cell.__ie.onclick = function (ev) {
+                cell.onClick = function (ev) {
                     // get target table cell
                     var target = $(ev.target);
                     while (target) {
@@ -264,12 +267,6 @@
                         }
                         target = target.getParent();
                     }
-                    if (!target) {
-                        throw Error('failed to get event target: ' + ev.target);
-                    }
-                    ev.cancelBubble = true;
-                    ev.stopPropagation();
-                    ev.preventDefault();
                     delegate.didSelectRowAtIndexPath(target.indexPath, tableView);
                 };
             }

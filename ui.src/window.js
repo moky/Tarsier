@@ -38,9 +38,7 @@
     var Window = function (frame) {
         View.call(this);
         this.setClassName('TSWindow');
-
-        var ctrl = this;
-        var element = this.__ie;
+        var vc = this;
 
         // init title
         var title = new View();
@@ -52,8 +50,8 @@
         var close = new Button();
         close.setClassName('TSWindowClose');
         close.onClick = function (ev) {
-            if (ctrl.onClose(ev)) {
-                element.remove();
+            if (vc.onClose(ev)) {
+                vc.remove();
             }
         };
         this.appendChild(close);
@@ -69,8 +67,8 @@
         this.setFrame(frame);
 
         Draggable.enable(this, [title]);
-        element.onclick = function (ev) {
-            ctrl.floatToTop();
+        this.__ie.onclick = function (ev) {
+            vc.floatToTop();
         };
     };
     Window.prototype = Object.create(View.prototype);

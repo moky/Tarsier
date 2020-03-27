@@ -29,7 +29,6 @@
     'use strict';
 
     var View = ns.View;
-    var Image = ns.Image;
 
     var Button = function (btn) {
         if (!btn) {
@@ -39,18 +38,18 @@
         // bind click event
         var vc = this;
         this.__ie.onclick = function (ev) {
-            ev.cancelBubble = true;
-            ev.stopPropagation();
-            ev.preventDefault();
-            vc.onClick(ev);
+            if (typeof vc.onClick === 'function') {
+                ev.cancelBubble = true;
+                ev.stopPropagation();
+                ev.preventDefault();
+                vc.onClick(ev);
+            }
         };
     };
     Button.prototype = Object.create(View.prototype);
     Button.prototype.constructor = Button;
 
-    View.prototype.onClick = function (ev) {
-        // process click event in subclass
-    };
+    View.prototype.onClick = null;
 
     View.prototype.setImage = function (src) {
         this.__ie.style.backgroundImage = 'url(' + src + ')';
