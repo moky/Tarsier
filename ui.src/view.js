@@ -72,55 +72,106 @@
         return this;
     };
 
-    View.prototype.getParent = function () {
-        return $(this.__ie.parentNode);
+    View.prototype.setBackgroundColor = function (color) {
+        if (color instanceof Color) {
+            color = color.toString();
+        }
+        this.__ie.style.backgroundColor = color;
+        return this;
     };
+
     View.prototype.remove = function () {
         var parent = this.getParent();
-        if (parent) {
-            parent.removeChild(this);
-        } else {
+        if (!parent) {
             throw Error('parent node empty');
         }
+        parent.removeChild(this);
+        return this;
+    };
+
+    View.prototype.floatToTop = function () {
+        var parent = this.getParent();
+        if (!parent) {
+            console.error('parent node empty');
+            return null;
+        }
+        var siblings = parent.getChildren();
+        var pos = siblings.indexOf(this);
+        var zIndex = 0, z;
+        var i = 0, total = siblings.length;
+        for (; i < pos; ++i) {
+            z = siblings[i].getZ();
+            if (zIndex < z) {
+                zIndex = z;
+            }
+        }
+        for (++i; i < total; ++i) {
+            z = siblings[i].getZ();
+            if (zIndex <= z) {
+                zIndex = z + 1;
+            }
+        }
+        this.setZ(zIndex);
+        return this;
+    };
+
+    View.prototype.layoutSubviews = function () {
+        if (!this.needsLayoutSubviews) {
+            return ;
+        }
+        var children = this.getChildren();
+        for (var i = 0; i < children.length; ++i) {
+            children[i].layoutSubviews();
+        }
+        this.needsLayoutSubviews = false;
         return this;
     };
 
     //
-    //  Children
+    //  Events
     //
 
-    View.prototype.getChildren = function () {
-        var children = [];
-        var nodes = this.__ie.childNodes;
-        var item;
-        for (var i = 0; i < nodes.length; ++i) {
-            item = nodes[i];
-            if (item instanceof HTMLElement) {
-                children.push($(item));
-            }
-        }
-        return children;
-    };
-    View.prototype.firstChild = function () {
-        return $(this.__ie.firstChild);
-    };
-    View.prototype.lastChild = function () {
-        return $(this.__ie.lastChild);
-    };
+    View.prototype.onEnter = null;
+    View.prototype.onExit = null;
+
+    //
+    //  Children
+    //
     View.prototype.appendChild = function (child) {
         child = $(child);
-        this.__ie.appendChild(child.__ie);
+        insert.call(this, child.__ie, null);
         return this;
     };
     View.prototype.insertBefore = function (newChild, existingChild) {
         newChild = $(newChild);
         existingChild = $(existingChild);
-        this.__ie.insertBefore(newChild.__ie, existingChild.__ie);
+        insert.call(this, newChild.__ie, existingChild.__ie);
         return this;
+    };
+    View.prototype.insertAfter = function (newChild, existingChild) {
+        newChild = $(newChild);
+        existingChild = $(existingChild);
+        // NOTICE: next sibling maybe not a HTMLElement
+        insert.call(this, newChild.__ie, existingChild.__ie.nextSibling);
+        return this;
+    };
+    var insert = function (new_node, existing_node) {
+        if (existing_node) {
+            this.__ie.insertBefore(new_node, existing_node);
+        } else {
+            this.__ie.appendChild(new_node);
+        }
+        var newChild = $(new_node);
+        if (typeof newChild.onEnter === 'function') {
+            newChild.onEnter();
+        }
     };
 
     View.prototype.removeChild = function (child) {
         child = $(child);
+        if (typeof child.onExit === 'function') {
+            child.onExit();
+        }
         // 1. remove child node from parent node
         this.__ie.removeChild(child.__ie);
         // 2. remove child node from node controller
@@ -140,66 +191,107 @@
     View.prototype.replaceChild = function (newChild, oldChild) {
         newChild = $(newChild);
         oldChild = $(oldChild);
-        // 1. replace old node with new node
+        // 1. exit old child
+        if (typeof oldChild.onExit === 'function') {
+            oldChild.onExit();
+        }
+        // 2. replace old node with new node
         this.__ie.replaceChild(newChild.__ie, oldChild.__ie);
-        // 2. remove old node from node controller
+        // 3. enter new child
+        if (typeof newChild.onEnter === 'function') {
+            newChild.onEnter();
+        }
+        // 4. remove old node from node controller
         //    (to break circular reference)
         delete oldChild.__ie;
-        return this;
-    };
-    View.prototype.contains = function (child) {
-        child = $(child);
-        return this.__ie.contains(child.__ie);
-    };
-
-    View.prototype.layoutSubviews = function () {
-        if (!this.needsLayoutSubviews) {
-            return ;
-        }
-        var children = this.getChildren();
-        for (var i = 0; i < children.length; ++i) {
-            children[i].layoutSubviews();
-        }
-        this.needsLayoutSubviews = false;
-        return this;
-    };
-
-    View.prototype.floatToTop = function () {
-        var parent = this.getParent();
-        if (!parent) {
-            console.error('parent node empty');
-            return null;
-        }
-        var brothers = parent.getChildren();
-        var pos = brothers.indexOf(this);
-        var zIndex = 0, z;
-        var i = 0, total = brothers.length;
-        for (; i < pos; ++i) {
-            z = brothers[i].getZ();
-            if (zIndex < z) {
-                zIndex = z;
-            }
-        }
-        for (++i; i < total; ++i) {
-            z = brothers[i].getZ();
-            if (zIndex <= z) {
-                zIndex = z + 1;
-            }
-        }
-        this.setZ(zIndex);
-        return this;
-    };
-
-    View.prototype.setBackgroundColor = function (color) {
-        if (color instanceof Color) {
-            color = color.toString();
-        }
-        this.__ie.style.backgroundColor = color;
         return this;
     };
 
     //-------- namespace --------
     ns.View = View;
     ns.Div = View;
+
+}(tarsier.ui);
+
+!function (ns) {
+    'use strict';
+
+    var $ = ns.$;
+    var View = ns.View;
+
+    //
+    //  View Hierarchy
+    //
+
+    View.prototype.getParent = function () {
+        return $(this.__ie.parentNode);
+    };
+
+    View.prototype.previousSibling = function () {
+        // NOTICE: previous sibling maybe not a HTMLElement
+        var parent = this.getParent();
+        if (parent) {
+            var siblings = parent.getChildren();
+            var index = siblings.indexOf(this);
+            if (index > 0) {
+                return siblings[index - 1];
+            }
+        }
+        return null;
+        // return $(this.__ie.previousSibling);
+    };
+    View.prototype.nextSibling = function () {
+        // NOTICE: next sibling maybe not a HTMLElement
+        var parent = this.getParent();
+        if (parent) {
+            var siblings = parent.getChildren();
+            var index = siblings.indexOf(this);
+            if (index < 0) {
+                throw Error('Hierarchy error: ' + siblings);
+            }
+            index += 1;
+            if (index < siblings.length) {
+                return siblings[index];
+            }
+        }
+        return null;
+        // return $(this.__ie.nextSibling);
+    };
+
+    View.prototype.getChildren = function () {
+        var children = [];
+        var nodes = this.__ie.childNodes;
+        var item;
+        for (var i = 0; i < nodes.length; ++i) {
+            item = nodes[i];
+            if (item instanceof HTMLElement) {
+                children.push($(item));
+            }
+        }
+        return children;
+    };
+    View.prototype.firstChild = function () {
+        var children = this.getChildren();
+        if (children.length > 0) {
+            return children[0];
+        } else {
+            return null;
+        }
+        // return $(this.__ie.firstChild);
+    };
+    View.prototype.lastChild = function () {
+        var children = this.getChildren();
+        if (children.length > 0) {
+            return children[children.length - 1];
+        } else {
+            return null;
+        }
+        // return $(this.__ie.lastChild);
+    };
+
+    View.prototype.contains = function (child) {
+        child = $(child);
+        return this.__ie.contains(child.__ie);
+    };
 
 }(tarsier.ui);

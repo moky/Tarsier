@@ -2,7 +2,7 @@
  *  Tarsier UI Kits (v0.1.0)
  *
  * @author    moKy <albert.moky at gmail.com>
- * @date      Mar. 27, 2020
+ * @date      Mar. 28, 2020
  * @copyright (c) 2020 Albert Moky
  * @license   {@link https://mit-license.org | MIT License}
  */;
@@ -337,49 +337,94 @@ if (typeof tarsier.ui !== "object") {
         }
         return this
     };
-    View.prototype.getParent = function() {
-        return $(this.__ie.parentNode)
+    View.prototype.setBackgroundColor = function(color) {
+        if (color instanceof Color) {
+            color = color.toString()
+        }
+        this.__ie.style.backgroundColor = color;
+        return this
     };
     View.prototype.remove = function() {
         var parent = this.getParent();
-        if (parent) {
-            parent.removeChild(this)
-        } else {
+        if (!parent) {
             throw Error("parent node empty")
         }
+        parent.removeChild(this);
         return this
     };
-    View.prototype.getChildren = function() {
-        var children = [];
-        var nodes = this.__ie.childNodes;
-        var item;
-        for (var i = 0; i < nodes.length; ++i) {
-            item = nodes[i];
-            if (item instanceof HTMLElement) {
-                children.push($(item))
+    View.prototype.floatToTop = function() {
+        var parent = this.getParent();
+        if (!parent) {
+            console.error("parent node empty");
+            return null
+        }
+        var siblings = parent.getChildren();
+        var pos = siblings.indexOf(this);
+        var zIndex = 0,
+            z;
+        var i = 0,
+            total = siblings.length;
+        for (; i < pos; ++i) {
+            z = siblings[i].getZ();
+            if (zIndex < z) {
+                zIndex = z
             }
         }
-        return children
+        for (++i; i < total; ++i) {
+            z = siblings[i].getZ();
+            if (zIndex <= z) {
+                zIndex = z + 1
+            }
+        }
+        this.setZ(zIndex);
+        return this
     };
-    View.prototype.firstChild = function() {
-        return $(this.__ie.firstChild)
+    View.prototype.layoutSubviews = function() {
+        if (!this.needsLayoutSubviews) {
+            return
+        }
+        var children = this.getChildren();
+        for (var i = 0; i < children.length; ++i) {
+            children[i].layoutSubviews()
+        }
+        this.needsLayoutSubviews = false;
+        return this
     };
-    View.prototype.lastChild = function() {
-        return $(this.__ie.lastChild)
-    };
+    View.prototype.onEnter = null;
+    View.prototype.onExit = null;
     View.prototype.appendChild = function(child) {
         child = $(child);
-        this.__ie.appendChild(child.__ie);
+        insert.call(this, child.__ie, null);
         return this
     };
     View.prototype.insertBefore = function(newChild, existingChild) {
         newChild = $(newChild);
         existingChild = $(existingChild);
-        this.__ie.insertBefore(newChild.__ie, existingChild.__ie);
+        insert.call(this, newChild.__ie, existingChild.__ie);
         return this
+    };
+    View.prototype.insertAfter = function(newChild, existingChild) {
+        newChild = $(newChild);
+        existingChild = $(existingChild);
+        insert.call(this, newChild.__ie, existingChild.__ie.nextSibling);
+        return this
+    };
+    var insert = function(new_node, existing_node) {
+        if (existing_node) {
+            this.__ie.insertBefore(new_node, existing_node)
+        } else {
+            this.__ie.appendChild(new_node)
+        }
+        var newChild = $(new_node);
+        if (typeof newChild.onEnter === "function") {
+            newChild.onEnter()
+        }
     };
     View.prototype.removeChild = function(child) {
         child = $(child);
+        if (typeof child.onExit === "function") {
+            child.onExit()
+        }
         this.__ie.removeChild(child.__ie);
         delete child.__ie;
         return this
@@ -395,61 +440,83 @@ if (typeof tarsier.ui !== "object") {
     View.prototype.replaceChild = function(newChild, oldChild) {
         newChild = $(newChild);
         oldChild = $(oldChild);
+        if (typeof oldChild.onExit === "function") {
+            oldChild.onExit()
+        }
         this.__ie.replaceChild(newChild.__ie, oldChild.__ie);
+        if (typeof newChild.onEnter === "function") {
+            newChild.onEnter()
+        }
         delete oldChild.__ie;
-        return this
-    };
-    View.prototype.contains = function(child) {
-        child = $(child);
-        return this.__ie.contains(child.__ie)
-    };
-    View.prototype.layoutSubviews = function() {
-        if (!this.needsLayoutSubviews) {
-            return
-        }
-        var children = this.getChildren();
-        for (var i = 0; i < children.length; ++i) {
-            children[i].layoutSubviews()
-        }
-        this.needsLayoutSubviews = false;
-        return this
-    };
-    View.prototype.floatToTop = function() {
-        var parent = this.getParent();
-        if (!parent) {
-            console.error("parent node empty");
-            return null
-        }
-        var brothers = parent.getChildren();
-        var pos = brothers.indexOf(this);
-        var zIndex = 0,
-            z;
-        var i = 0,
-            total = brothers.length;
-        for (; i < pos; ++i) {
-            z = brothers[i].getZ();
-            if (zIndex < z) {
-                zIndex = z
-            }
-        }
-        for (++i; i < total; ++i) {
-            z = brothers[i].getZ();
-            if (zIndex <= z) {
-                zIndex = z + 1
-            }
-        }
-        this.setZ(zIndex);
-        return this
-    };
-    View.prototype.setBackgroundColor = function(color) {
-        if (color instanceof Color) {
-            color = color.toString()
-        }
-        this.__ie.style.backgroundColor = color;
         return this
     };
     ns.View = View;
     ns.Div = View
+}(tarsier.ui);
+! function(ns) {
+    var $ = ns.$;
+    var View = ns.View;
+    View.prototype.getParent = function() {
+        return $(this.__ie.parentNode)
+    };
+    View.prototype.previousSibling = function() {
+        var parent = this.getParent();
+        if (parent) {
+            var siblings = parent.getChildren();
+            var index = siblings.indexOf(this);
+            if (index > 0) {
+                return siblings[index - 1]
+            }
+        }
+        return null
+    };
+    View.prototype.nextSibling = function() {
+        var parent = this.getParent();
+        if (parent) {
+            var siblings = parent.getChildren();
+            var index = siblings.indexOf(this);
+            if (index < 0) {
+                throw Error("Hierarchy error: " + siblings)
+            }
+            index += 1;
+            if (index < siblings.length) {
+                return siblings[index]
+            }
+        }
+        return null
+    };
+    View.prototype.getChildren = function() {
+        var children = [];
+        var nodes = this.__ie.childNodes;
+        var item;
+        for (var i = 0; i < nodes.length; ++i) {
+            item = nodes[i];
+            if (item instanceof HTMLElement) {
+                children.push($(item))
+            }
+        }
+        return children
+    };
+    View.prototype.firstChild = function() {
+        var children = this.getChildren();
+        if (children.length > 0) {
+            return children[0]
+        } else {
+            return null
+        }
+    };
+    View.prototype.lastChild = function() {
+        var children = this.getChildren();
+        if (children.length > 0) {
+            return children[children.length - 1]
+        } else {
+            return null
+        }
+    };
+    View.prototype.contains = function(child) {
+        child = $(child);
+        return this.__ie.contains(child.__ie)
+    }
 }(tarsier.ui);
 ! function(ns) {
     var Point = ns.Point;
