@@ -61,13 +61,13 @@
     View.prototype.setX = function (left) {
         this.__ie.style.position = 'absolute';
         this.__ie.style.left = left + 'px';
-        this.__ie.offsetLeft = this.__frame.origin.x = left;
+        this.__frame.origin.x = left;
         return this;
     };
     View.prototype.setY = function (top) {
         this.__ie.style.position = 'absolute';
         this.__ie.style.top = top + 'px';
-        this.__ie.offsetTop = this.__frame.origin.y = top;
+        this.__frame.origin.y = top;
         return this;
     };
     View.prototype.setZ = function (zIndex) {

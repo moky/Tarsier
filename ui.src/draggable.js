@@ -38,9 +38,8 @@
     };
 
     var start = function (point, controller) {
-        var div = controller.__ie;
-        point.x -= div.offsetLeft;
-        point.y -= div.offsetTop;
+        point.x -= controller.getX();
+        point.y -= controller.getY();
         controller.__dp = point;
         // onfocus
         controller.floatToTop();
