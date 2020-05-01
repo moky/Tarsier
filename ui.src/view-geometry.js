@@ -87,8 +87,8 @@
 
     View.prototype.setWidth = function (width) {
         this.__ie.style.width = width + 'px';
-        this.__ie.offsetWidth = this.__frame.size.width = width;
-        // update bounds
+        // update frame & bounds
+        this.__frame.size.width = width;
         this.__bounds.size.width = width - this.__bounds.origin.x - this.getPaddingRight();
         // layout subviews while bounds changed
         this.needsLayoutSubviews = true;
@@ -96,8 +96,8 @@
     };
     View.prototype.setHeight = function (height) {
         this.__ie.style.height = height + 'px';
-        this.__ie.offsetHeight = this.__frame.size.height = height;
-        // update bounds
+        // update frame & bounds
+        this.__frame.size.height = height;
         this.__bounds.size.height = height - this.__bounds.origin.y - this.getPaddingBottom();
         // layout subviews while bounds changed
         this.needsLayoutSubviews = true;
