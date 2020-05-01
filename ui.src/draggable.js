@@ -115,6 +115,8 @@
         var div;
         for (var i = 0; i < dragAreas.length; ++i) {
             div = $(dragAreas[i]).__ie;
+            div.draggable = false;
+
             // PC
             div.ondragstart = null;
             div.ondrag = div.ondragover = null;

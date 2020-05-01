@@ -80,6 +80,7 @@
     };
 
     Window.prototype.onClose = function (ev) {
+        Draggable.disable(this, [this.titleView]);
         return true;
     };
 
