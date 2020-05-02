@@ -44,7 +44,7 @@
         this.__frame = Rect.Zero.clone();
         this.__bounds = Rect.Zero.clone();
 
-        this.setScroll(false);
+        // this.setScroll(false);
         // indicates whether need to layout childNodes
         this.needsLayoutSubviews = false;
     };
